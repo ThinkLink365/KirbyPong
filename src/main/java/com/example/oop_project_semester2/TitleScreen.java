@@ -3,13 +3,20 @@ package com.example.oop_project_semester2;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.beans.property.SimpleIntegerProperty;
+
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,15 +28,14 @@ public class TitleScreen extends Application{
     private Ball ball;
 
     private Racket racket;
-    private Button btn;
-
-    private Button p1btn;
-
-    private Button p2btn;
-
-    private Button scorebtn;
 
     Stage window;
+
+    Scene titleScene, mainScene;
+
+    Text p1name;
+
+    Text p2name;
 
 
     public static void main(String[] args) {
@@ -44,19 +50,28 @@ public class TitleScreen extends Application{
             closeProgram();
         });
 
+        VBox options = new VBox();
+        options.setSpacing(10);
+
+
         Image icon = new Image("file:src/Kirby.jpg");
+        Image kirbyBall = new Image("file:src/Kirby.png");
         Image player1Icon = new Image("file:src/kirbyP1.png");
         Image player2Icon = new Image("file:src/Meta_Knight.png");
 
         player1 = new Player("Player 1", 0);
         player2 = new Player("Player 2", 0);
-        ball = new Ball(icon, 1, 1);
-        racket = new Racket(400, 20);
+        ball = new Ball(kirbyBall, 1, 1);
+        racket = new Racket(20, 400 );
 
         AtomicInteger finalscore = new AtomicInteger();
 
-        Group root = new Group();
-        Scene scene = new Scene(root,600,600, Color.DEEPPINK);
+        Group titleScreen = new Group();
+        Group main = new Group();
+
+        titleScene = new Scene(titleScreen, 1200, 800, Color.DEEPPINK);
+        mainScene = new Scene(main,800,1200, Color.DEEPPINK);
+
 
 
         ImageView p1 = new ImageView(player1Icon);
@@ -121,33 +136,35 @@ public class TitleScreen extends Application{
         p2text.setFont(Font.font("Times new roman", 30));
         p2text.setFill(Color.BLUEVIOLET);
 
-        btn = new Button();
-        btn.setOnAction(e  -> System.out.println("It works"));
+        Button btn = new Button();
+        btn.setOnAction(e  -> window.setScene(mainScene));
         btn.setText("Begin");
         btn.setLayoutX(50);
         btn.setLayoutY(50);
 
-        p1btn = new Button();
-        p1btn.setText("Confirm");
+        Button p1btn = new Button();
+        p1btn.setText("Confirm P1");
         p1btn.setLayoutX(350);
         p1btn.setLayoutY(600);
         p1btn.setOnAction(e -> {
             String name = p1Name.getText();
             player1.setName(name);
+            p1name.setText(name);
         } );
 
-        p2btn = new Button();
-        p2btn.setText("Confirm");
+        Button p2btn = new Button();
+        p2btn.setText("Confirm P2");
         p2btn.setLayoutX(1050);
         p2btn.setLayoutY(600);
         p2btn.setOnAction(e -> {
             String name = p2Name.getText();
             player2.setName(name);
+            p2name.setText(name);
         } );
 
 
-        scorebtn = new Button();
-        scorebtn.setText("Confirm");
+        Button scorebtn = new Button();
+        scorebtn.setText("Confirm score");
         scorebtn.setLayoutX(1050);
         scorebtn.setLayoutY(650);
         scorebtn.setOnAction(e -> {
@@ -187,8 +204,10 @@ public class TitleScreen extends Application{
             }} );
 
 
-        Button exitButton = new Button("Exit");
-        exitButton.setOnAction(e -> closeProgram());
+        Button exitButton1 = new Button("Exit");
+        exitButton1.setOnAction(e -> closeProgram());
+
+
 
 
         ToggleGroup speedToggleGroup = new ToggleGroup();
@@ -229,8 +248,8 @@ public class TitleScreen extends Application{
         });
 
         ComboBox<String> speedIncreaseOptions = new ComboBox<>();
-        speedIncreaseOptions.getItems().addAll("Every hit", "Every 2 hits", "Every 3 hits");
-        speedIncreaseOptions.setValue("Every hit"); // Default value
+        speedIncreaseOptions.getItems().addAll("Every point", "Every 2 points", "Every 3 points");
+        speedIncreaseOptions.setValue("Every point"); // Default value
 
         speedIncreaseOptions.setLayoutX(50);
         speedIncreaseOptions.setLayoutY(350);
@@ -238,13 +257,13 @@ public class TitleScreen extends Application{
         speedIncreaseOptions.setOnAction(e -> {
             String selectedOption = speedIncreaseOptions.getValue();
             switch (selectedOption) {
-                case "Every hit":
+                case "Every point":
                     ball.setSpeedIncrease(1);
                     break;
-                case "Every 2 hits":
+                case "Every 2 points":
                     ball.setSpeedIncrease(2);
                     break;
-                case "Every 3 hits":
+                case "Every 3 points":
                     ball.setSpeedIncrease(3);
                     break;
                 default:
@@ -252,11 +271,63 @@ public class TitleScreen extends Application{
             }
         });
 
+        //main scene items
+
+        Button exitButton2 = new Button("Exit");
+        exitButton2.setOnAction(e -> closeProgram());
+
+        p1name = new Text(player1.getName());
+        p1name.setX(100);
+        p1name.setY(100);
 
 
+        p2name = new Text(player2.getName());
+        p2name.setX(500);
+        p2name.setY(100);
 
-        root.getChildren().addAll(title,p1,p2,p1Name,p2Name,p1text,p2text,btn,p1btn,p2btn,slowSpeedRadioButton,mediumSpeedRadioButton,fastSpeedRadioButton,setScore,scorebtn,exitButton,setHeight,setWidth,heightbtn,widthbtn,speedIncreaseOptions);
-        window.setScene(scene);
+        Text p1score = new Text(player1.getPlayerScore() + "");
+        p1score.setX(100);
+        p1score.setY(150);
+
+
+        Text p2score = new Text(player2.getPlayerScore() + "");
+        p2score.setX(500);
+        p2score.setY(150);
+
+        ImageView pongball = new ImageView(ball.getImage().getImage());
+        pongball.setX(750);
+        pongball.setY(400);
+        pongball.setFitHeight(100);
+        pongball.setFitWidth(100);
+
+        Rectangle racket1 = new Rectangle();
+        racket1.setX(100);
+        racket1.setY(100);
+        racket1.setWidth(racket.getRacketWidth());
+        racket1.setHeight(racket.getRacketHeight());
+        racket1.setFill(Color.HOTPINK);
+        racket1.setStrokeWidth(5);
+        racket1.setStroke(Color.PURPLE);
+
+        Rectangle racket2 = new Rectangle();
+        racket2.setX(1200);
+        racket2.setY(100);
+        racket2.setWidth(racket.getRacketWidth());
+        racket2.setHeight(racket.getRacketHeight());
+        racket2.setFill(Color.HOTPINK);
+        racket2.setStrokeWidth(5);
+        racket2.setStroke(Color.PURPLE);
+
+        racket1.widthProperty().bind(racket.widthProperty());
+        racket1.heightProperty().bind(racket.heightProperty());
+
+        racket2.widthProperty().bind(racket.widthProperty());
+        racket2.heightProperty().bind(racket.heightProperty());
+
+        options.getChildren().addAll(p1Name,p1btn,p2Name,p2btn,setScore,scorebtn,setHeight,heightbtn,setWidth,widthbtn,slowSpeedRadioButton,mediumSpeedRadioButton,fastSpeedRadioButton,speedIncreaseOptions,btn,exitButton1);
+        titleScreen.getChildren().addAll(title,p1,p2,p1Name,p2Name,p1text,p2text, btn, p1btn, p2btn,slowSpeedRadioButton,mediumSpeedRadioButton,fastSpeedRadioButton,setScore, scorebtn,exitButton1,setHeight,setWidth,heightbtn,widthbtn,speedIncreaseOptions);
+        main.getChildren().addAll(exitButton2,p1name,p2name,p1score,p2score,pongball,racket1,racket2);
+        window.setScene(titleScene);
         window.show();
 
     }
@@ -272,6 +343,14 @@ public class TitleScreen extends Application{
                 window.close();
             }
         });
+    }
+
+    private Group createButtons(){
+        Group buttonGroup = new Group();
+
+        return buttonGroup;
+
+
     }
 
 

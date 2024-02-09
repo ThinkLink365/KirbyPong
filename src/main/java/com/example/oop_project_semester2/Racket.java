@@ -1,28 +1,38 @@
 package com.example.oop_project_semester2;
 
+import javafx.beans.property.SimpleIntegerProperty;
+
 public class Racket {
-    private int racketWidth;
+    private final SimpleIntegerProperty racketWidth;
+    private final SimpleIntegerProperty racketHeight;
 
-    private int racketHeight;
-
-    public Racket(int height, int width){
-        this.racketHeight = height;
-        this.racketWidth = width;
+    public Racket(int width, int height) {
+        this.racketWidth = new SimpleIntegerProperty(width);
+        this.racketHeight = new SimpleIntegerProperty(height);
     }
 
-    public int getRacketHeight() {
-        return racketHeight;
-    }
-
+    // Getters and setters for racketWidth and racketHeight
     public int getRacketWidth() {
+        return racketWidth.get();
+    }
+
+    public SimpleIntegerProperty widthProperty() {
         return racketWidth;
     }
 
-    public void setRacketHeight(int racketHeight) {
-        this.racketHeight = racketHeight;
+    public void setRacketWidth(int racketWidth) {
+        this.racketWidth.set(racketWidth);
     }
 
-    public void setRacketWidth(int racketWidth) {
-        this.racketWidth = racketWidth;
+    public int getRacketHeight() {
+        return racketHeight.get();
+    }
+
+    public SimpleIntegerProperty heightProperty() {
+        return racketHeight;
+    }
+
+    public void setRacketHeight(int racketHeight) {
+        this.racketHeight.set(racketHeight);
     }
 }
