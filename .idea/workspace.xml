@@ -4,8 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a4e15bc3-b15f-4665-938a-e24f4e0ab097" name="Changes" comment="Made the second scene. Player Names, Ball properties, Racket properties can all be changed and affect the game scene">
+    <list default="true" id="a4e15bc3-b15f-4665-938a-e24f4e0ab097" name="Changes" comment="Made the code a bit tidier. Cleaned up the options and made them resizeable.">
+      <change afterPath="$PROJECT_DIR$/src/dedede.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Meta_Knight.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/Meta_Knight.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/kirbyP1.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/kirbyP1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/OOPApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/GameScreen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/TitleScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/TitleScreen.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -88,7 +93,14 @@
       <option name="project" value="LOCAL" />
       <updated>1707489650430</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Made the code a bit tidier. Cleaned up the options and made them resizeable.">
+      <created>1707586913703</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1707586913703</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -106,6 +118,7 @@
     <MESSAGE value="Started project. Make concept for title screen and game screen" />
     <MESSAGE value="Added Racket, Player and ball classes.Got all 0.5 marks functionality working(Player names/ball speed/racket dimensions/final score/exit option/how often ball speed increases)" />
     <MESSAGE value="Made the second scene. Player Names, Ball properties, Racket properties can all be changed and affect the game scene" />
-    <option name="LAST_COMMIT_MESSAGE" value="Made the second scene. Player Names, Ball properties, Racket properties can all be changed and affect the game scene" />
+    <MESSAGE value="Made the code a bit tidier. Cleaned up the options and made them resizeable." />
+    <option name="LAST_COMMIT_MESSAGE" value="Made the code a bit tidier. Cleaned up the options and made them resizeable." />
   </component>
 </project>

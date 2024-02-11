@@ -2,10 +2,7 @@ package com.example.oop_project_semester2;
 
 import javafx.application.Application;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,12 +10,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.beans.property.SimpleIntegerProperty;
-
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -32,13 +27,6 @@ public class TitleScreen extends Application {
     private Racket racket;
 
     private Stage window;
-
-    private Scene titleScene, mainScene;
-
-    private Text p1name;
-
-    private Text p2name;
-
     private TextField p1Name;
     private TextField p2Name;
     private TextField setScore;
@@ -64,14 +52,40 @@ public class TitleScreen extends Application {
         menu.setAlignment(Pos.CENTER);
         menu.setStyle("-fx-background-color: deeppink;");
 
+        // Title text
+        Text titleText = new Text("Welcome to Kirby Pong");
+        titleText.setFill(Color.WHITE);
+
+        // Set initial font size
+        titleText.setFont(Font.font("Arial", FontWeight.BOLD, 100));
+
+        // Listener to update font size when window is resized
+        window.widthProperty().addListener((obs, oldVal, newVal) -> {
+            titleText.setFont(Font.font("Arial", FontWeight.BOLD, window.getWidth() / 15));
+        });
+
+        // Set the position of the title text
+        StackPane.setAlignment(titleText, Pos.TOP_CENTER);
+
+        // "Choose your options" text
+        Text chooseOptionsText = new Text("Choose your options below");
+        chooseOptionsText.setFill(Color.WHITE);
+        chooseOptionsText.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        StackPane.setAlignment(chooseOptionsText, Pos.CENTER);
+
+        VBox titleVBox = new VBox(titleText, chooseOptionsText);
+        titleVBox.setSpacing(10);
+        titleVBox.setAlignment(Pos.TOP_CENTER);
+
         HBox options = new HBox();
         options.setSpacing(10);
-        options.setAlignment(Pos.CENTER);
+        options.setAlignment(Pos.CENTER); // Changed alignment to Pos.CENTER
 
         Image icon = new Image("file:src/Kirby.jpg");
         Image kirbyBall = new Image("file:src/Kirby.png");
-        Image player1Icon = new Image("file:src/kirbyP1.png");
-        Image player2Icon = new Image("file:src/Meta_Knight.png");
+        Image kirbyRender = new Image("file:src/kirbyP1.png");
+        Image metaKnightRender = new Image("file:src/Meta_Knight.png");
+        Image dededeRender = new Image("file:src/dedede.png");
 
         // Initialize player1 and player2 with default values
         player1 = new Player("Player 1", 0);
@@ -82,110 +96,43 @@ public class TitleScreen extends Application {
 
         finalscore = new AtomicInteger();
 
-        Group titleScreen = new Group();
-        Group main = new Group();
+        Scene titleScene = new Scene(menu, 800, 800, Color.DEEPPINK);
 
-        titleScene = new Scene(menu, 1200, 800, Color.DEEPPINK);
 
-        mainScene = new Scene(main, 800, 1200, Color.DEEPPINK);
-        ImageView p1 = new ImageView(player1Icon);
-        p1.setX(200);
-        p1.setY(150);
-        p1.setFitHeight(300);
-        p1.setFitWidth(300);
 
-        ImageView p2 = new ImageView(player2Icon);
-        p2.setX(1000);
-        p2.setY(150);
-        p2.setFitHeight(300);
-        p2.setFitWidth(300);
+        ImageView image1 = new ImageView(kirbyRender);
+        image1.setFitHeight(300);
+        image1.setPreserveRatio(true); // Preserve aspect ratio
+        image1.fitWidthProperty().bind(window.widthProperty().multiply(0.2)); // Set width dynamically
+
+        // Set the position of player 1 ImageView to the left center of the StackPane
+        StackPane.setAlignment(image1, Pos.BOTTOM_CENTER);
+
+
+        ImageView image2 = new ImageView(metaKnightRender);
+        image2.setFitHeight(300);
+        image2.setPreserveRatio(true); // Preserve aspect ratio
+        image2.fitWidthProperty().bind(window.widthProperty().multiply(0.2)); // Set width dynamically
+
+        // Set the position of player 1 ImageView to the left center of the StackPane
+        StackPane.setAlignment(image2, Pos.CENTER_LEFT);
+
+        ImageView image3 = new ImageView(dededeRender);
+        image3.setFitHeight(300);
+        image3.setPreserveRatio(true); // Preserve aspect ratio
+        image3.fitWidthProperty().bind(window.widthProperty().multiply(0.2)); // Set width dynamically
+
+        // Set the position of player 1 ImageView to the left center of the StackPane
+        StackPane.setAlignment(image3, Pos.CENTER_RIGHT);
+
 
         window.getIcons().add(icon);
         window.setTitle("Kirby Pong");
-        window.setWidth(800);
-        window.setHeight(800);
         window.setFullScreen(true);
 
-        Text title = new Text();
-        title.setText("Welcome to Kirby Pong");
-        title.setX(300);
-        title.setY(75);
-        title.setFont(Font.font("Times new roman", 100));
-        title.setFill(Color.BLUEVIOLET);
-
-        Text p1text = new Text();
-        p1text.setText("Enter P1");
-        p1text.setX(300);
-        p1text.setY(550);
-        p1text.setFont(Font.font("Times new roman", 30));
-        p1text.setFill(Color.BLUEVIOLET);
-
-
-        Text p2text = new Text();
-        p2text.setText("Enter P2");
-        p2text.setX(1000);
-        p2text.setY(550);
-        p2text.setFont(Font.font("Times new roman", 30));
-        p2text.setFill(Color.BLUEVIOLET);
-
-        VBox textFieldGroup = createTextFields();
-        //main scene items
-
-        Button exitButton2 = new Button("Exit");
-        exitButton2.setOnAction(e -> closeProgram());
-
-
-        p1name = new Text(player1.getName());
-        p1name.setX(100);
-        p1name.setY(100);
-
-
-        p2name = new Text(player2.getName());
-        p2name.setX(500);
-        p2name.setY(100);
-
-        Text p1score = new Text(player1.getPlayerScore() + "");
-        p1score.setX(100);
-        p1score.setY(150);
-
-
-        Text p2score = new Text(player2.getPlayerScore() + "");
-        p2score.setX(500);
-        p2score.setY(150);
-
-        ImageView pongball = new ImageView(ball.getImage().getImage());
-        pongball.setX(750);
-        pongball.setY(400);
-        pongball.setFitHeight(100);
-        pongball.setFitWidth(100);
-
-        Rectangle racket1 = new Rectangle();
-        racket1.setX(100);
-        racket1.setY(100);
-        racket1.setWidth(racket.getRacketWidth());
-        racket1.setHeight(racket.getRacketHeight());
-        racket1.setFill(Color.HOTPINK);
-        racket1.setStrokeWidth(5);
-        racket1.setStroke(Color.PURPLE);
-
-        Rectangle racket2 = new Rectangle();
-        racket2.setX(1200);
-        racket2.setY(100);
-        racket2.setWidth(racket.getRacketWidth());
-        racket2.setHeight(racket.getRacketHeight());
-        racket2.setFill(Color.HOTPINK);
-        racket2.setStrokeWidth(5);
-        racket2.setStroke(Color.PURPLE);
-
-        racket1.widthProperty().bind(racket.widthProperty());
-        racket1.heightProperty().bind(racket.heightProperty());
-
-        racket2.widthProperty().bind(racket.widthProperty());
-        racket2.heightProperty().bind(racket.heightProperty());
-
-        options.getChildren().addAll(textFieldGroup);
-        menu.getChildren().addAll(options);
-        main.getChildren().addAll(exitButton2, p1name, p2name, p1score, p2score, pongball, racket1, racket2);
+        VBox textFieldGroup = createTextFields();options.getChildren().addAll(textFieldGroup);
+        menu.getChildren().addAll(options,titleVBox,image1,image2,image3);
+        options.toFront(); // Bring options to the front
         window.setScene(titleScene);
         window.show();
     }
@@ -216,7 +163,6 @@ public class TitleScreen extends Application {
         p1btn.setOnAction(e -> {
             String name = p1Name.getText();
             player1.setName(name);
-            p1name.setText(name);
         });
         player1Box.getChildren().addAll(p1Name, p1btn);
 
@@ -229,7 +175,6 @@ public class TitleScreen extends Application {
         p2btn.setOnAction(e -> {
             String name = p2Name.getText();
             player2.setName(name);
-            p2name.setText(name);
         });
         player2Box.getChildren().addAll(p2Name, p2btn);
 
@@ -295,10 +240,12 @@ public class TitleScreen extends Application {
         // Add optionsHBox (containing combo boxes) under textFieldGroup
         textFieldGroup.getChildren().add(optionsHBox);
 
-        // Begin button
-        Button beginButton = new Button("Begin");
-        beginButton.setOnAction(e -> window.setScene(mainScene));
-
+        Button switchButton = new Button("Begin");
+        switchButton.setOnAction(e -> {
+            window.hide();
+            // Pass instances of Player, Ball, and Racket to GameScreen constructor
+            new GameScreen(player1, player2, ball, racket).start(new Stage());
+        });
         // Exit button
         Button exitButton1 = new Button("Exit");
         exitButton1.setOnAction(e -> closeProgram());
@@ -307,7 +254,7 @@ public class TitleScreen extends Application {
         gameHBox.setSpacing(140); // Set spacing between combo boxes
         gameHBox.setAlignment(Pos.CENTER_LEFT);
 
-        gameHBox.getChildren().addAll(beginButton,exitButton1);
+        gameHBox.getChildren().addAll(switchButton,exitButton1);
 
 
         // Add buttons to the textFieldGroup
@@ -365,61 +312,5 @@ public class TitleScreen extends Application {
         VBox vbox = new VBox(10);
         vbox.getChildren().addAll(new Label("Speed Increase Options:"), speedIncreaseOptions);
         return vbox;
-    }
-
-
-
-    private Group createOptions() {
-        Group optionsGroup = new Group();
-
-        ComboBox<String> speedComboBox = new ComboBox<>();
-        speedComboBox.getItems().addAll("Slow", "Medium", "Fast");
-        speedComboBox.setValue("Slow"); // Default value
-
-        ComboBox<String> speedIncreaseOptions = new ComboBox<>();
-        speedIncreaseOptions.getItems().addAll("Every point", "Every 2 points", "Every 3 points");
-        speedIncreaseOptions.setValue("Every point"); // Default value
-
-        speedComboBox.setOnAction(e -> {
-            String selectedSpeed = speedComboBox.getValue();
-            switch (selectedSpeed) {
-                case "Slow":
-                    ball.setBallSpeed(1);
-                    break;
-                case "Medium":
-                    ball.setBallSpeed(2);
-                    break;
-                case "Fast":
-                    ball.setBallSpeed(3);
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        speedIncreaseOptions.setOnAction(e -> {
-            String selectedOption = speedIncreaseOptions.getValue();
-            switch (selectedOption) {
-                case "Every point":
-                    ball.setSpeedIncrease(1);
-                    break;
-                case "Every 2 points":
-                    ball.setSpeedIncrease(2);
-                    break;
-                case "Every 3 points":
-                    ball.setSpeedIncrease(3);
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        VBox vbox = new VBox(10); // Vertical box to hold combo boxes
-        vbox.setAlignment(Pos.CENTER);
-        vbox.getChildren().addAll(speedComboBox, speedIncreaseOptions);
-
-        optionsGroup.getChildren().add(vbox);
-
-        return optionsGroup;
     }
 }
