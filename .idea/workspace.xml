@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a4e15bc3-b15f-4665-938a-e24f4e0ab097" name="Changes" comment="Made the code a bit tidier. Cleaned up the options and made them resizeable.">
-      <change afterPath="$PROJECT_DIR$/src/dedede.png" afterDir="false" />
+    <list default="true" id="a4e15bc3-b15f-4665-938a-e24f4e0ab097" name="Changes" comment="Made each scene its own class. Game Screen now resizeable and looks nicer.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Meta_Knight.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/Meta_Knight.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kirbyP1.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/kirbyP1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/OOPApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/GameScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Ball.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/GameScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/GameScreen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/TitleScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/TitleScreen.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -100,7 +97,14 @@
       <option name="project" value="LOCAL" />
       <updated>1707586913703</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Made each scene its own class. Game Screen now resizeable and looks nicer.">
+      <created>1707686408669</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1707686408669</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -119,6 +123,7 @@
     <MESSAGE value="Added Racket, Player and ball classes.Got all 0.5 marks functionality working(Player names/ball speed/racket dimensions/final score/exit option/how often ball speed increases)" />
     <MESSAGE value="Made the second scene. Player Names, Ball properties, Racket properties can all be changed and affect the game scene" />
     <MESSAGE value="Made the code a bit tidier. Cleaned up the options and made them resizeable." />
-    <option name="LAST_COMMIT_MESSAGE" value="Made the code a bit tidier. Cleaned up the options and made them resizeable." />
+    <MESSAGE value="Made each scene its own class. Game Screen now resizeable and looks nicer." />
+    <option name="LAST_COMMIT_MESSAGE" value="Made each scene its own class. Game Screen now resizeable and looks nicer." />
   </component>
 </project>

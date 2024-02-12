@@ -26,6 +26,7 @@ public class GameScreen extends Application {
     private final Ball ball;
     private final Racket racket;
 
+    // Constructor to initialize the game screen with players, ball, and racket
     public GameScreen(Player player1, Player player2, Ball ball, Racket racket) {
         this.player1 = player1;
         this.player2 = player2;
@@ -41,14 +42,17 @@ public class GameScreen extends Application {
             closeProgram();
         });
 
+        // Set window properties
         Image icon = new Image("file:src/Kirby.jpg");
         window.getIcons().add(icon);
         window.setTitle("Kirby Pong");
         window.setFullScreen(true);
 
+        // Create exit button
         Button exitButton = new Button("Exit");
         exitButton.setOnAction(e -> closeProgram());
 
+        // Player 1 details
         Text playerName1 = new Text(player1.getName());
         playerName1.setFont(Font.font("Arial", FontWeight.BOLD, 50));
         playerName1.setFill(Color.WHITE);
@@ -56,6 +60,7 @@ public class GameScreen extends Application {
         playerScore1.setFont(Font.font("Arial", FontWeight.BOLD, 35));
         playerScore1.setFill(Color.WHITE);
 
+        // Player 2 details
         Text playerName2 = new Text(player2.getName());
         playerName2.setFont(Font.font("Arial", FontWeight.BOLD, 50));
         playerName2.setFill(Color.WHITE);
@@ -65,11 +70,11 @@ public class GameScreen extends Application {
 
         // Create VBox for player 1 details
         VBox player1Detail = new VBox(playerName1, playerScore1);
-        player1Detail.setAlignment(Pos.TOP_LEFT); // Align to top left
+        player1Detail.setAlignment(Pos.TOP_LEFT);
 
         // Create VBox for player 2 details
         VBox player2Detail = new VBox(playerName2, playerScore2);
-        player2Detail.setAlignment(Pos.TOP_RIGHT); // Align to top right
+        player2Detail.setAlignment(Pos.TOP_RIGHT);
 
         // BorderPane for the top section containing exit button and player details
         BorderPane topPane = new BorderPane();
@@ -79,6 +84,7 @@ public class GameScreen extends Application {
         topPane.setCenter(exitButton);
         BorderPane.setAlignment(exitButton, Pos.TOP_CENTER);
 
+        // Create rectangles for rackets
         Rectangle racket1 = new Rectangle(racket.getRacketWidth(), racket.getRacketHeight());
         racket1.setFill(Color.HOTPINK);
         racket1.setStrokeWidth(5);
@@ -99,12 +105,14 @@ public class GameScreen extends Application {
         rightRacketPane.setAlignment(Pos.CENTER_RIGHT);
         rightRacketPane.getChildren().add(racket2);
 
+        // Set up ball
         ImageView pongball = new ImageView(ball.getImage().getImage());
         pongball.setX(750);
         pongball.setY(400);
         pongball.setFitHeight(100);
         pongball.setFitWidth(100);
 
+        // BorderPane for the game layout
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: deeppink;");
         root.setCenter(new StackPane(pongball)); // Center ball
@@ -122,6 +130,7 @@ public class GameScreen extends Application {
         launch(args);
     }
 
+    // Method to handle closing of the window
     private void closeProgram() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
