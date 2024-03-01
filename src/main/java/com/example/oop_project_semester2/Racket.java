@@ -1,6 +1,7 @@
 package com.example.oop_project_semester2;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.layout.VBox;
 
 public class Racket {
     // Attributes
@@ -37,9 +38,23 @@ public class Racket {
     public SimpleIntegerProperty heightProperty() {
         return racketHeight;
     }
-
     // Setter for racketHeight
     public void setRacketHeight(int racketHeight) {
         this.racketHeight.set(racketHeight);
     }
+    public void moveRacket(VBox racketPane, int speed, double sceneHeight) {
+        if (racketPane != null && racketPane.getScene() != null) {
+            // Assuming racketPane is the VBox containing the racket
+            double newY = racketPane.getTranslateY() + speed;
+
+            // Adjust newY to prevent racket from moving out of bounds
+            newY = Math.min(sceneHeight - racketHeight.get() - 100, Math.max(0, newY));
+
+            racketPane.setTranslateY(newY);
+        }
+    }
+
+
+
 }
+

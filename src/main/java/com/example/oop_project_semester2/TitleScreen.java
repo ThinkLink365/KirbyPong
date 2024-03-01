@@ -47,6 +47,8 @@ public class TitleScreen extends Application {
         window = PrimaryStage;
         window.getIcons().add(icon);
         window.setTitle("Kirby Pong");
+        window.setMinHeight(700);
+        window.setMinWidth(700);
         window.setFullScreen(true);
         window.setOnCloseRequest(e -> {
             e.consume();
@@ -140,6 +142,21 @@ public class TitleScreen extends Application {
         window.setScene(titleScene);
         //Display the stage
         window.show();
+
+        new Thread(() -> {
+                while (true) {
+                try {
+                    Thread.sleep(16);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+
+            }
+        }).start();
+
+
+
     }
 
     private void closeProgram() {
@@ -159,7 +176,7 @@ public class TitleScreen extends Application {
         // Create a VBox to hold all the game options
         VBox optionsSelection = new VBox();
         optionsSelection.setSpacing(10);
-        optionsSelection.setAlignment(Pos.CENTER_LEFT); // Align options to the left side
+        optionsSelection.setAlignment(Pos.CENTER); // Align options to the left side
 
         // Create an HBox for entering Player 1 name
         HBox player1Box = new HBox();
@@ -249,7 +266,6 @@ public class TitleScreen extends Application {
         // Create an HBox to hold combo boxes for additional game options
         HBox optionsHBox = new HBox();
         optionsHBox.setSpacing(10); // Set spacing between combo boxes
-        optionsHBox.setAlignment(Pos.CENTER_LEFT);
 
         // Add combo boxes for speed and speed increase options
         optionsHBox.getChildren().addAll(createSpeedComboBox(), createSpeedIncreaseComboBox());
@@ -270,7 +286,6 @@ public class TitleScreen extends Application {
         // Create an HBox to hold the game start and exit buttons
         HBox gameHBox = new HBox();
         gameHBox.setSpacing(140); // Set spacing between buttons
-        gameHBox.setAlignment(Pos.CENTER_LEFT);
         gameHBox.getChildren().addAll(switchButton, exitButton);
 
         // Add the HBox with buttons to the VBox

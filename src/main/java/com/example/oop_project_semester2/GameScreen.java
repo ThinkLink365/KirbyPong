@@ -1,6 +1,7 @@
 package com.example.oop_project_semester2;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -8,7 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -17,6 +20,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class GameScreen extends Application {
 
@@ -46,11 +52,17 @@ public class GameScreen extends Application {
         Image icon = new Image("file:src/Kirby.jpg");
         window.getIcons().add(icon);
         window.setTitle("Kirby Pong");
+        window.setMinHeight(700);
+        window.setMinWidth(700);
         window.setFullScreen(true);
+
+        Racket p1Racket = new Racket(racket.getRacketWidth(), racket.getRacketHeight());
+        Racket p2Racket = new Racket(racket.getRacketWidth(), racket.getRacketHeight());
 
         // Create exit button
         Button exitButton = new Button("Exit");
         exitButton.setOnAction(e -> closeProgram());
+        exitButton.setFocusTraversable(false);
 
         // Player 1 details
         Text playerName1 = new Text(player1.getName());
@@ -97,33 +109,152 @@ public class GameScreen extends Application {
 
         // VBox to center the racket1 (left racket)
         VBox leftRacketPane = new VBox();
-        leftRacketPane.setAlignment(Pos.CENTER_LEFT);
+        leftRacketPane.setAlignment(Pos.TOP_LEFT);
         leftRacketPane.getChildren().add(racket1);
+        leftRacketPane.setFocusTraversable(true); // Set focusable
 
         // VBox to center the racket2 (right racket)
         VBox rightRacketPane = new VBox();
-        rightRacketPane.setAlignment(Pos.CENTER_RIGHT);
+        rightRacketPane.setAlignment(Pos.TOP_RIGHT);
         rightRacketPane.getChildren().add(racket2);
+        rightRacketPane.setFocusTraversable(true); // Set focusable
 
         // Set up ball
-        ImageView pongball = new ImageView(ball.getImage().getImage());
+        ImageView pongball = ball.getImage();
         pongball.setX(750);
         pongball.setY(400);
         pongball.setFitHeight(100);
         pongball.setFitWidth(100);
+        Pane ballPane = new Pane();
+        ballPane.getChildren().add(pongball);
+
+
+
 
         // BorderPane for the game layout
         BorderPane root = new BorderPane();
+        BorderPane.setAlignment(ballPane, Pos.CENTER);
         root.setStyle("-fx-background-color: deeppink;");
-        root.setCenter(new StackPane(pongball)); // Center ball
-        root.setLeft(leftRacketPane); // Set left racket
-        root.setRight(rightRacketPane); // Set right racket
-        root.setTop(topPane); // Set the top section BorderPane
+//        root.setCenter(new StackPane(pongball)); // Center ball
+
+        StackPane ballStackPane = new StackPane(ballPane);
+        ballStackPane.setAlignment(Pos.CENTER);
+        root.setCenter(ballStackPane); // Center the ball
+
+        root.setLeft(new StackPane(leftRacketPane)); // Set left racket
+        root.setRight(new StackPane(rightRacketPane)); // Set right racket
+        root.setTop(new StackPane(topPane)); // Set the top section BorderPane
+        root.getChildren().add(pongball);
 
         Scene scene = new Scene(root, 800, 800);
         window.setScene(scene);
 
         window.show();
+        AtomicInteger p1RacketSpeed = new AtomicInteger();
+        AtomicInteger p2RacketSpeed = new AtomicInteger();
+
+        Thread p1RacketThread = new Thread(() -> {
+            while (true) {
+                Platform.runLater(() -> p1Racket.moveRacket(leftRacketPane, p1RacketSpeed.get(), scene.getHeight()));
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    System.out.println("Thread interrupted: " + e.getMessage());
+                }
+            }
+        });
+        p1RacketThread.setDaemon(true);
+        p1RacketThread.start();
+
+        Thread p2RacketThread = new Thread(() -> {
+            while (true) {
+                Platform.runLater(() -> p2Racket.moveRacket(rightRacketPane, p2RacketSpeed.get(), scene.getHeight()));
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    System.out.println("Thread interrupted: " + e.getMessage());
+                }
+            }
+        });
+        p2RacketThread.setDaemon(true);
+        p2RacketThread.start();
+
+        primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            switch (event.getCode()) {
+                case W:
+                    System.out.println("Player 1: W pressed");
+                    p1RacketSpeed.set(-5);
+                    break;
+                case S:
+                    System.out.println("Player 1: S pressed");
+                    p1RacketSpeed.set(5);
+                    break;
+                case UP:
+                    System.out.println("Player 2: UP pressed");
+                    p2RacketSpeed.set(-5);
+                    break;
+                case DOWN:
+                    System.out.println("Player 2: DOWN pressed");
+                    p2RacketSpeed.set(5);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        primaryStage.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            switch (event.getCode()) {
+                case W:
+                case S:
+                    System.out.println("Player 1: W or S released");
+                    p1RacketSpeed.set(0);
+                    break;
+                case UP:
+                case DOWN:
+                    System.out.println("Player 2: UP or DOWN released");
+                    p2RacketSpeed.set(0);
+                    break;
+                default:
+                    break;
+            }
+        });
+        AtomicInteger ballXSpeed = new AtomicInteger(2); // Initial speed of the ball along the x-axis
+        AtomicInteger ballYSpeed = new AtomicInteger(2); // Initial speed of the ball along the y-axis
+
+        Thread ballMovementThread = new Thread(() -> {
+            AtomicReference<Double> i = new AtomicReference<>((double) 0);
+
+            while (true) {
+                Platform.runLater(() -> {
+                    double newBallX = pongball.getX() + ballXSpeed.get();
+                    double newBallY = pongball.getY() + ballYSpeed.get();
+
+                    // Check if the ball hits the borders, and reverse its direction if necessary
+                    if (newBallX <= 0 || newBallX >= scene.getWidth() - pongball.getFitWidth()) {
+                        ballXSpeed.set(-ballXSpeed.get());
+                    }
+                    if (newBallY <= 100 || newBallY >= scene.getHeight() - pongball.getFitHeight()) {
+                        ballYSpeed.set(-ballYSpeed.get());
+                    }
+
+                    pongball.setX(newBallX);
+                    pongball.setY(newBallY);
+
+                    ball.getImage().setRotate(i.getAndSet((double) (i.get() + 1)));
+
+                });
+
+                try {
+                    Thread.sleep(10); // Adjust this value for desired speed
+                } catch (InterruptedException e) {
+                    System.out.println("Thread interrupted: " + e.getMessage());
+                }
+            }
+        });
+        ballMovementThread.setDaemon(true);
+        ballMovementThread.start();
+
+
     }
 
     public static void main(String[] args) {
