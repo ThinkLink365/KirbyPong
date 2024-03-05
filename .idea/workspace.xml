@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a4e15bc3-b15f-4665-938a-e24f4e0ab097" name="Changes" comment="Added comments. Phase 1 Complete">
+    <list default="true" id="a4e15bc3-b15f-4665-938a-e24f4e0ab097" name="Changes" comment="rackets move independently. ball moves and spins with slight issues with resizing, but we ball">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Bounce.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Scoring.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/detectCollison.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Ball.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/GameScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/GameScreen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/OOPController.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Racket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Racket.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/TitleScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/TitleScreen.java" afterDir="false" />
     </list>
@@ -112,7 +115,14 @@
       <option name="project" value="LOCAL" />
       <updated>1707743091100</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="rackets move independently. ball moves and spins with slight issues with resizing, but we ball">
+      <created>1709288006503</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1709288006503</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -133,7 +143,8 @@
     <MESSAGE value="Made the code a bit tidier. Cleaned up the options and made them resizeable." />
     <MESSAGE value="Made each scene its own class. Game Screen now resizeable and looks nicer." />
     <MESSAGE value="Added comments. Phase 1 Complete" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added comments. Phase 1 Complete" />
+    <MESSAGE value="rackets move independently. ball moves and spins with slight issues with resizing, but we ball" />
+    <option name="LAST_COMMIT_MESSAGE" value="rackets move independently. ball moves and spins with slight issues with resizing, but we ball" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/OOP_Project_Semester2$TitleScreen.ic" NAME="TitleScreen Coverage Results" MODIFIED="1708971931647" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">

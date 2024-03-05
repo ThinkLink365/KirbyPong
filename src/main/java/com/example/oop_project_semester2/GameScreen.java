@@ -96,6 +96,8 @@ public class GameScreen extends Application {
         topPane.setCenter(exitButton);
         BorderPane.setAlignment(exitButton, Pos.TOP_CENTER);
 
+
+
         // Create rectangles for rackets
         Rectangle racket1 = new Rectangle(racket.getRacketWidth(), racket.getRacketHeight());
         racket1.setFill(Color.HOTPINK);
@@ -141,45 +143,32 @@ public class GameScreen extends Application {
         ballStackPane.setAlignment(Pos.CENTER);
         root.setCenter(ballStackPane); // Center the ball
 
-        root.setLeft(new StackPane(leftRacketPane)); // Set left racket
-        root.setRight(new StackPane(rightRacketPane)); // Set right racket
+        root.setLeft(leftRacketPane); // Set left racket
+        root.setRight(rightRacketPane); // Set right racket
         root.setTop(new StackPane(topPane)); // Set the top section BorderPane
         root.getChildren().add(pongball);
+
+
 
         Scene scene = new Scene(root, 800, 800);
         window.setScene(scene);
 
         window.show();
+        double screenWidth = scene.getWidth();
+        double screenHeight = scene.getHeight();
+        System.out.println(screenWidth);
+        System.out.println(screenHeight);
+
+
+        ball.startBallMovementThread(scene, pongball,leftRacketPane, rightRacketPane);
+
         AtomicInteger p1RacketSpeed = new AtomicInteger();
         AtomicInteger p2RacketSpeed = new AtomicInteger();
 
-        Thread p1RacketThread = new Thread(() -> {
-            while (true) {
-                Platform.runLater(() -> p1Racket.moveRacket(leftRacketPane, p1RacketSpeed.get(), scene.getHeight()));
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    System.out.println("Thread interrupted: " + e.getMessage());
-                }
-            }
-        });
-        p1RacketThread.setDaemon(true);
-        p1RacketThread.start();
+        p1Racket.startRacketMovementThread(leftRacketPane,p1RacketSpeed, scene.getHeight());
+        p2Racket.startRacketMovementThread(rightRacketPane,p2RacketSpeed, scene.getHeight());
 
-        Thread p2RacketThread = new Thread(() -> {
-            while (true) {
-                Platform.runLater(() -> p2Racket.moveRacket(rightRacketPane, p2RacketSpeed.get(), scene.getHeight()));
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    System.out.println("Thread interrupted: " + e.getMessage());
-                }
-            }
-        });
-        p2RacketThread.setDaemon(true);
-        p2RacketThread.start();
-
-        primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+      primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             switch (event.getCode()) {
                 case W:
                     System.out.println("Player 1: W pressed");
@@ -218,50 +207,13 @@ public class GameScreen extends Application {
                     break;
             }
         });
-        AtomicInteger ballXSpeed = new AtomicInteger(2); // Initial speed of the ball along the x-axis
-        AtomicInteger ballYSpeed = new AtomicInteger(2); // Initial speed of the ball along the y-axis
-
-        Thread ballMovementThread = new Thread(() -> {
-            AtomicReference<Double> i = new AtomicReference<>((double) 0);
-
-            while (true) {
-                Platform.runLater(() -> {
-                    double newBallX = pongball.getX() + ballXSpeed.get();
-                    double newBallY = pongball.getY() + ballYSpeed.get();
-
-                    // Check if the ball hits the borders, and reverse its direction if necessary
-                    if (newBallX <= 0 || newBallX >= scene.getWidth() - pongball.getFitWidth()) {
-                        ballXSpeed.set(-ballXSpeed.get());
-                    }
-                    if (newBallY <= 100 || newBallY >= scene.getHeight() - pongball.getFitHeight()) {
-                        ballYSpeed.set(-ballYSpeed.get());
-                    }
-
-                    pongball.setX(newBallX);
-                    pongball.setY(newBallY);
-
-                    ball.getImage().setRotate(i.getAndSet((double) (i.get() + 1)));
-
-                });
-
-                try {
-                    Thread.sleep(10); // Adjust this value for desired speed
-                } catch (InterruptedException e) {
-                    System.out.println("Thread interrupted: " + e.getMessage());
-                }
-            }
-        });
-        ballMovementThread.setDaemon(true);
-        ballMovementThread.start();
-
-
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 
-    // Method to handle closing of the window
+    //   Method to handle closing of the window
     private void closeProgram() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
