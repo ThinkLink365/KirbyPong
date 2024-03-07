@@ -30,4 +30,8 @@ public class Player {
     public void setPlayerScore(int playerScore) {
         this.playerScore = playerScore;
     }
+
+    public void incrementPlayerScore(int playerScore) {
+        this.playerScore++;
+    }
 }

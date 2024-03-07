@@ -4,15 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a4e15bc3-b15f-4665-938a-e24f4e0ab097" name="Changes" comment="rackets move independently. ball moves and spins with slight issues with resizing, but we ball">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Bounce.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Scoring.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/detectCollison.java" afterDir="false" />
+    <list default="true" id="a4e15bc3-b15f-4665-938a-e24f4e0ab097" name="Changes" comment="collision working">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/BallMovement.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/CollisionDetection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/RacketMovement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Ball.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Bounce.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/GameScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/GameScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Racket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Racket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Scoring.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Scoring.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/TitleScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/TitleScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/detectCollison.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +67,15 @@
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.example.oop_project_semester2" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.oop_project_semester2.TitleScreen" />
+      <module name="OOP_Project_Semester2" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -122,7 +135,14 @@
       <option name="project" value="LOCAL" />
       <updated>1709288006503</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="collision working">
+      <created>1709668793809</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1709668793809</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -144,7 +164,8 @@
     <MESSAGE value="Made each scene its own class. Game Screen now resizeable and looks nicer." />
     <MESSAGE value="Added comments. Phase 1 Complete" />
     <MESSAGE value="rackets move independently. ball moves and spins with slight issues with resizing, but we ball" />
-    <option name="LAST_COMMIT_MESSAGE" value="rackets move independently. ball moves and spins with slight issues with resizing, but we ball" />
+    <MESSAGE value="collision working" />
+    <option name="LAST_COMMIT_MESSAGE" value="collision working" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/OOP_Project_Semester2$TitleScreen.ic" NAME="TitleScreen Coverage Results" MODIFIED="1708971931647" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">

@@ -1,7 +1,6 @@
 package com.example.oop_project_semester2;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -22,7 +21,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class GameScreen extends Application {
 
@@ -71,6 +69,7 @@ public class GameScreen extends Application {
         Text playerScore1 = new Text(player1.getPlayerScore() + "");
         playerScore1.setFont(Font.font("Arial", FontWeight.BOLD, 35));
         playerScore1.setFill(Color.WHITE);
+
 
         // Player 2 details
         Text playerName2 = new Text(player2.getName());
@@ -150,23 +149,21 @@ public class GameScreen extends Application {
 
 
 
+
         Scene scene = new Scene(root, 800, 800);
         window.setScene(scene);
 
         window.show();
-        double screenWidth = scene.getWidth();
-        double screenHeight = scene.getHeight();
-        System.out.println(screenWidth);
-        System.out.println(screenHeight);
-
-
-        ball.startBallMovementThread(scene, pongball,leftRacketPane, rightRacketPane);
 
         AtomicInteger p1RacketSpeed = new AtomicInteger();
         AtomicInteger p2RacketSpeed = new AtomicInteger();
 
-        p1Racket.startRacketMovementThread(leftRacketPane,p1RacketSpeed, scene.getHeight());
-        p2Racket.startRacketMovementThread(rightRacketPane,p2RacketSpeed, scene.getHeight());
+        RacketMovement.startRacketMovementThread(leftRacketPane, p1RacketSpeed, scene.getHeight(), racket.getRacketHeight());
+        RacketMovement.startRacketMovementThread(rightRacketPane, p2RacketSpeed, scene.getHeight(), racket.getRacketHeight());
+
+        BallMovement ballMovement = new BallMovement();
+        ballMovement.startBallMovementThread(scene, pongball, leftRacketPane, rightRacketPane, ball.getBallSpeed(), player1, player2);
+
 
       primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             switch (event.getCode()) {
