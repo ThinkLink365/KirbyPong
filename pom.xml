@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.example.oop_project_semester2/com.example.oop_project_semester2.GameScreen
+                                com.example.oop_project_semester2/com.example.oop_project_semester2.View.GameScreen
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

@@ -1,5 +1,8 @@
-package com.example.oop_project_semester2;
+package com.example.oop_project_semester2.View;
 
+import com.example.oop_project_semester2.Model.Ball;
+import com.example.oop_project_semester2.Model.Player;
+import com.example.oop_project_semester2.Model.Racket;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -143,10 +146,6 @@ public class TitleScreen extends Application {
         window.setScene(titleScene);
         //Display the stage
         window.show();
-
-
-
-
     }
 
     private void closeProgram() {
@@ -283,8 +282,6 @@ public class TitleScreen extends Application {
 
         return optionsSelection; // Return the VBox containing all game options
     }
-
-
 
     private VBox createSpeedComboBox() {
         //Create a dropdown menu for selecting the speed of the ball

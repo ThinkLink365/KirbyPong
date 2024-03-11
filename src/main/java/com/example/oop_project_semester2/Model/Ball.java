@@ -1,4 +1,4 @@
-package com.example.oop_project_semester2;
+package com.example.oop_project_semester2.Model;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

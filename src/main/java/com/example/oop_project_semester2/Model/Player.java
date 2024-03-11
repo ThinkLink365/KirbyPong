@@ -1,4 +1,4 @@
-package com.example.oop_project_semester2;
+package com.example.oop_project_semester2.Model;
 
 public class Player {
     // Attributes
@@ -30,8 +30,7 @@ public class Player {
     public void setPlayerScore(int playerScore) {
         this.playerScore = playerScore;
     }
-
-    public void incrementPlayerScore(int playerScore) {
+    public void incrementPlayerScore() {
         this.playerScore++;
     }
 }
