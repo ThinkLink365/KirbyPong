@@ -8,20 +8,28 @@ import javafx.util.Duration;
 public class Scoring {
 
     // Method to check if a player scored and update the score accordingly
-    public static void checkAndUpdateScore(double ballX, double sceneWidth, Player player1, Player player2,
-                                           Text playerScore1, Text playerScore2, Text scoreMessage) {
+    public static boolean checkAndUpdateScore(double ballX, double sceneWidth, Player player1, Player player2,
+                                              Text playerScore1, Text playerScore2, Text scoreMessage, int finalScore) {
         if (ballX <= -50) {
             // Player 2 scores
             player2.incrementPlayerScore(); // Increment player 2's score
             updatePlayerScoreText(playerScore2, player2.getPlayerScore()); // Update player 2's score text
             showMessage(scoreMessage, player2.getName() + " scores!");
+
+            // Check if player 2 reaches the final score
+            return player2.getPlayerScore() >= finalScore; // Game over
         } else if (ballX >= sceneWidth - 50) {
             // Player 1 scores
             player1.incrementPlayerScore(); // Increment player 1's score
             updatePlayerScoreText(playerScore1, player1.getPlayerScore()); // Update player 1's score text
             showMessage(scoreMessage, player1.getName() + " scores!");
+
+            // Check if player 1 reaches the final score
+            return player1.getPlayerScore() >= finalScore; // Game over
         }
+        return false; // Game continues
     }
+
 
     // Method to update the player's score text
     public static void updatePlayerScoreText(Text playerScoreText, int score) {

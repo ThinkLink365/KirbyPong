@@ -18,9 +18,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
-
 public class TitleScreen extends Application {
     private Player player1;
     private Player player2;
@@ -32,7 +29,6 @@ public class TitleScreen extends Application {
     private TextField setScore;
     private TextField setHeight;
     private TextField setWidth;
-    private AtomicInteger finalscore;
 
     public static void main(String[] args) {
         launch(args);
@@ -96,13 +92,10 @@ public class TitleScreen extends Application {
         options.setAlignment(Pos.CENTER);
 
         // Initialize player1,player2, ball and racket with default values
-        player1 = new Player("Player 1", 0);
-        player2 = new Player("Player 2", 0);
+        player1 = new Player("Player 1", 0, 5);
+        player2 = new Player("Player 2", 0, 5);
         ball = new Ball(kirbyBall, 1, 1);
         racket = new Racket(20, 400);
-
-        // Variable for the final score
-        finalscore = new AtomicInteger();
 
         //Creating the title scene
         Scene titleScene = new Scene(menu, 800, 800, Color.DEEPPINK);
@@ -205,8 +198,8 @@ public class TitleScreen extends Application {
         scorebtn.setOnAction(e -> {
             try {
                 int score = Integer.parseInt(setScore.getText());
-                finalscore.set(score); // Update the final score
-                System.out.println("Final score set to: " + finalscore);
+                player1.setFinalscore(score); // Update the final score
+                player2.setFinalscore(score); // Update the final score
             } catch (NumberFormatException ex) {
                 System.out.println("Invalid score format");
             }
@@ -312,18 +305,18 @@ public class TitleScreen extends Application {
     private VBox createSpeedIncreaseComboBox() {
         //Create a dropdown menu for selecting the speed increase options
         ComboBox<String> speedIncreaseOptions = new ComboBox<>();
-        speedIncreaseOptions.getItems().addAll("Every point", "Every 2 points", "Every 3 points");
-        speedIncreaseOptions.setValue("Every point"); // Default value
+        speedIncreaseOptions.getItems().addAll("Every Bounce", "Every 2 Bounces", "Every 3 Bounces");
+        speedIncreaseOptions.setValue("Every Bounce"); // Default value
         speedIncreaseOptions.setOnAction(e -> {
             String selectedOption = speedIncreaseOptions.getValue();
             switch (selectedOption) {
-                case "Every point":
+                case "Every Bounce":
                     ball.setSpeedIncrease(1);
                     break;
-                case "Every 2 points":
+                case "Every 2 Bounces":
                     ball.setSpeedIncrease(2);
                     break;
-                case "Every 3 points":
+                case "Every 3 Bounces":
                     ball.setSpeedIncrease(3);
                     break;
                 default:

@@ -8,7 +8,6 @@ public class Ball {
     private ImageView image; // ImageView to display the ball
     private int ballSpeed; // Speed of the ball
     private int speedIncrease; // Speed increase factor
-
     // Constructor
     public Ball(Image image, int speed, int increase) {
         this.image = new ImageView(image); // Initialize the image with provided Image

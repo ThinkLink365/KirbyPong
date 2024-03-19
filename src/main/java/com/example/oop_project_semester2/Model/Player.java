@@ -5,10 +5,14 @@ public class Player {
     private String name; // Player's name
     private int playerScore; // Player's score
 
+    private int finalscore; // Final score
+
     // Constructor
-    public Player(String name, int score) {
+    public Player(String name, int score, int endScore) {
         this.name = name; // Initialize player's name
         this.playerScore = score; // Initialize player's score
+        this.finalscore = endScore;
+
     }
 
     // Getter for the player's name
@@ -21,6 +25,10 @@ public class Player {
         return playerScore;
     }
 
+    public int getFinalscore() {
+        return finalscore;
+    }
+
     // Setter for the player's name
     public void setName(String name) {
         this.name = name;
@@ -30,6 +38,11 @@ public class Player {
     public void setPlayerScore(int playerScore) {
         this.playerScore = playerScore;
     }
+
+    public void setFinalscore(int finalscore) {
+        this.finalscore = finalscore;
+    }
+
     public void incrementPlayerScore() {
         this.playerScore++;
     }

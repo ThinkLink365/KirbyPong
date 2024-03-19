@@ -31,6 +31,23 @@ public class GameScreen extends Application {
     private final Player player2;
     private final Ball ball;
     private final Racket racket;
+    private final BallMovement ballMovement;
+
+    private final RacketMovement racketMovement;
+
+    private Button restartButton;
+
+    private Text playerScore1;
+
+    private Text playerScore2;
+
+    private ImageView pongball;
+
+    private Scene scene;
+
+    private boolean isPaused = false; // Track if the game is paused
+
+    private boolean restart = false;
 
     // Constructor to initialize the game screen with players, ball, and racket
     public GameScreen(Player player1, Player player2, Ball ball, Racket racket) {
@@ -38,6 +55,8 @@ public class GameScreen extends Application {
         this.player2 = player2;
         this.ball = ball;
         this.racket = racket;
+        this.ballMovement = new BallMovement();
+        this.racketMovement = new RacketMovement();
     }
 
     public static void main(String[] args) {
@@ -66,16 +85,32 @@ public class GameScreen extends Application {
         exitButton.setOnAction(e -> closeProgram()); // Set action for exit button
         exitButton.setFocusTraversable(false); // Disable focus traversal for exit button
 
+        // Create pause button
+        Button pauseButton = new Button("Pause");
+        pauseButton.setOnAction(e -> togglePause());
+        pauseButton.setFocusTraversable(false);// Disable focus traversal for pause button
+
+        // Create restart button
+        restartButton = new Button("Restart");
+        restartButton.setOnAction(e -> restartGame());
+        restartButton.setFocusTraversable(false);
+        restartButton.setVisible(false);
+
+
         // Set up player details and score message
         Text scoreMessage = new Text();
         scoreMessage.setFill(Color.WHITE);
         scoreMessage.setFont(Font.font("Arial", FontWeight.BOLD, 50));
 
+        Text endMessage = new Text();
+        endMessage.setFill(Color.WHITE);
+        endMessage.setFont(Font.font("Arial", FontWeight.BOLD, 50));
+
         // Player 1 details
         Text playerName1 = new Text(player1.getName());
         playerName1.setFont(Font.font("Arial", FontWeight.BOLD, 50));
         playerName1.setFill(Color.WHITE);
-        Text playerScore1 = new Text(player1.getPlayerScore() + "");
+        playerScore1 = new Text(player1.getPlayerScore() + "");
         playerScore1.setFont(Font.font("Arial", FontWeight.BOLD, 35));
         playerScore1.setFill(Color.WHITE);
 
@@ -83,7 +118,7 @@ public class GameScreen extends Application {
         Text playerName2 = new Text(player2.getName());
         playerName2.setFont(Font.font("Arial", FontWeight.BOLD, 50));
         playerName2.setFill(Color.WHITE);
-        Text playerScore2 = new Text(player2.getPlayerScore() + "");
+        playerScore2 = new Text(player2.getPlayerScore() + "");
         playerScore2.setFont(Font.font("Arial", FontWeight.BOLD, 35));
         playerScore2.setFill(Color.WHITE);
 
@@ -96,7 +131,7 @@ public class GameScreen extends Application {
         player2Detail.setAlignment(Pos.TOP_RIGHT);
 
         // Create VBox for score message and button
-        VBox detailsPane = new VBox(exitButton,scoreMessage);
+        VBox detailsPane = new VBox(exitButton,pauseButton,restartButton,scoreMessage);
         detailsPane.setAlignment(Pos.CENTER);
 
 
@@ -118,7 +153,7 @@ public class GameScreen extends Application {
         racket2.setStroke(Color.PURPLE);
 
         // Set up ball
-        ImageView pongball = ball.getImage();
+        pongball = ball.getImage();
         pongball.setX(750);
         pongball.setY(400);
         pongball.setFitHeight(100);
@@ -131,9 +166,10 @@ public class GameScreen extends Application {
         root.setLeft(racket1); // Set left racket
         root.setRight(racket2); // Set right racket
         root.setTop(topPane); // Set the top section BorderPane
+        root.setCenter(endMessage);
         root.getChildren().add(pongball); // Add the ball to root
 
-        Scene scene = new Scene(root, 800, 800);
+        scene = new Scene(root, 800, 800);
         window.setScene(scene);
 
         window.show();
@@ -148,11 +184,11 @@ public class GameScreen extends Application {
         keyboardListener.RacketStop(window, p1RacketSpeed, p2RacketSpeed);
 
         // Start threads for racket movement and ball movement
-        RacketMovement.startRacketMovementThread(racket1, p1RacketSpeed, scene.getHeight(), racket.getRacketHeight());
-        RacketMovement.startRacketMovementThread(racket2, p2RacketSpeed, scene.getHeight(), racket.getRacketHeight());
+        racketMovement.startRacketMovementThread(racket1, p1RacketSpeed, scene.getHeight(), racket.getRacketHeight());
+        racketMovement.startRacketMovementThread(racket2, p2RacketSpeed, scene.getHeight(), racket.getRacketHeight());
 
-        BallMovement ballMovement = new BallMovement();
-        ballMovement.startBallMovementThread(scene, pongball, racket1, racket2, ball.getBallSpeed(), player1, player2, playerScore1, playerScore2, scoreMessage);
+        ballMovement.startBallMovementThread(scene, pongball, racket1, racket2, ball, player1, player2, playerScore1, playerScore2, scoreMessage, player1.getFinalscore(), endMessage);
+
     }
 
     // Method to handle closing of the window
@@ -169,5 +205,34 @@ public class GameScreen extends Application {
                 window.close(); // Close the window if user confirms
             }
         });
+    }
+    private void togglePause() {
+        isPaused = !isPaused; // Toggle pause state
+
+        // If game is paused, stop ball movement thread
+        if (isPaused) {
+            ballMovement.pauseBallMovementThread();
+            racketMovement.pauseRacketMovementThread();
+            racketMovement.pauseRacketMovementThread();
+            restartButton.setVisible(true); // Show restart button
+        } else { // If game is resumed, start ball movement thread
+            ballMovement.resumeBallMovementThread();
+            racketMovement.resumeRacketMovementThread();
+            racketMovement.resumeRacketMovementThread();
+            restartButton.setVisible(false); // Hide restart button
+        }
+
+}
+
+    private void restartGame(){
+        restart = !restart;
+
+        if (restart){
+            player1.setPlayerScore(0);
+            player2.setPlayerScore(0);
+            playerScore1.setText(player1.getPlayerScore() + "");
+            playerScore2.setText(player2.getPlayerScore() + "");
+            ballMovement.restartBall(pongball,ball,scene);
+        }
     }
 }
