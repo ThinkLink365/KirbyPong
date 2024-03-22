@@ -3,8 +3,18 @@
     import javafx.scene.image.ImageView;
     import javafx.scene.shape.Rectangle;
 
+    /**
+     * This class handles the collision between the ball and racket.
+     */
     public class CollisionDetection {
-        // Method to check if the ball is colliding with the racket
+        /**
+         * Check to see if the ball is colliding with the racket.
+         *
+         * @param ball   the ball
+         * @param racket the racket
+         * @return true if colliding, false otherwise
+         */
+// Method to check if the ball is colliding with the racket
         public static boolean isCollidingWithRacket(ImageView ball, Rectangle racket) {
             //Calculate The dimensions of the ball
             double ballLeft = ball.getX();

@@ -18,6 +18,10 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * TitleScreen class represents the title screen of the game.
+ * It creates the user interface for the title screen and allows players to select options.
+ */
 public class TitleScreen extends Application {
     private Player player1;
     private Player player2;
@@ -30,21 +34,33 @@ public class TitleScreen extends Application {
     private TextField setHeight;
     private TextField setWidth;
 
+    private ToggleButton toggleSerializationButton;
+
+    /**
+     * The main method to launch the application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * Initializes and starts the title screen of the game.
+     *
+     * @param primaryStage the primary stage for the application
+     */
     @Override
-    public void start(Stage PrimaryStage) {
-        //Initialing Images
+    public void start(Stage primaryStage) {
+        // Initialize images
         Image icon = new Image("file:src/Kirby.jpg");
         Image kirbyBall = new Image("file:src/Kirby.png");
         Image kirbyRender = new Image("file:src/kirbyP1.png");
         Image metaKnightRender = new Image("file:src/Meta_Knight.png");
         Image dededeRender = new Image("file:src/dedede.png");
 
-        //Set the PrimaryStage to window and handle closing of the application outside the exit button.
-        window = PrimaryStage;
+        // Set up the primary stage
+        window = primaryStage;
         window.getIcons().add(icon);
         window.setTitle("Kirby Pong");
         window.setMinHeight(700);
@@ -55,7 +71,7 @@ public class TitleScreen extends Application {
             closeProgram();
         });
 
-        //Create a StackPane for the Menu options
+        // Create a StackPane for the menu options
         StackPane menu = new StackPane();
         menu.setAlignment(Pos.CENTER);
         menu.setStyle("-fx-background-color: deeppink;");
@@ -63,8 +79,6 @@ public class TitleScreen extends Application {
         // Title text
         Text titleText = new Text("Welcome to Kirby Pong");
         titleText.setFill(Color.WHITE);
-
-        // Set initial font size
         titleText.setFont(Font.font("Arial", FontWeight.BOLD, 100));
 
         // Listener to update font size when window is resized
@@ -81,68 +95,59 @@ public class TitleScreen extends Application {
         chooseOptionsText.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         StackPane.setAlignment(chooseOptionsText, Pos.CENTER);
 
-        //Create a Vbox to Line up The title text and Options text underneath each other.
+        // Create a VBox to line up the title text and options text underneath each other
         VBox titleVBox = new VBox(titleText, chooseOptionsText);
         titleVBox.setSpacing(10);
         titleVBox.setAlignment(Pos.TOP_CENTER);
 
-        //Create a Hbox for the options and center them
+        // Create an HBox for the options and center them
         HBox options = new HBox();
         options.setSpacing(10);
         options.setAlignment(Pos.CENTER);
 
-        // Initialize player1,player2, ball and racket with default values
+        // Initialize player1, player2, ball, and racket with default values
         player1 = new Player("Player 1", 0, 5);
         player2 = new Player("Player 2", 0, 5);
         ball = new Ball(kirbyBall, 1, 1);
         racket = new Racket(20, 400);
 
-        //Creating the title scene
+        // Create the title scene
         Scene titleScene = new Scene(menu, 800, 800, Color.DEEPPINK);
 
-        //Adding images
+        // Adding images
         ImageView image1 = new ImageView(kirbyRender);
         image1.setFitHeight(300);
-        image1.setPreserveRatio(true); // Preserve aspect ratio
-        image1.fitWidthProperty().bind(window.widthProperty().multiply(0.2)); // Set width dynamically
-
-        // Set the position of image1 ImageView to the bottom center of the StackPane
+        image1.setPreserveRatio(true);
+        image1.fitWidthProperty().bind(window.widthProperty().multiply(0.2));
         StackPane.setAlignment(image1, Pos.BOTTOM_CENTER);
 
         ImageView image2 = new ImageView(metaKnightRender);
         image2.setFitHeight(300);
-        image2.setPreserveRatio(true); // Preserve aspect ratio
-        image2.fitWidthProperty().bind(window.widthProperty().multiply(0.2)); // Set width dynamically
-
-        // Set the position of image2 ImageView to the left center of the StackPane
+        image2.setPreserveRatio(true);
+        image2.fitWidthProperty().bind(window.widthProperty().multiply(0.2));
         StackPane.setAlignment(image2, Pos.CENTER_LEFT);
 
         ImageView image3 = new ImageView(dededeRender);
         image3.setFitHeight(300);
-        image3.setPreserveRatio(true); // Preserve aspect ratio
-        image3.fitWidthProperty().bind(window.widthProperty().multiply(0.2)); // Set width dynamically
-
-        // Set the position of image 1 ImageView to the right center of the StackPane
+        image3.setPreserveRatio(true);
+        image3.fitWidthProperty().bind(window.widthProperty().multiply(0.2));
         StackPane.setAlignment(image3, Pos.CENTER_RIGHT);
-
 
         // Create a VBox for the game options
         VBox gameOptions = createGameOptions();
 
         // Add the game options VBox to the options HBox
-        //This lays the options out as a textfield with a confirmation button beside it going downwards with each option
         options.getChildren().addAll(gameOptions);
-        //Add all elements to menu
-        menu.getChildren().addAll(options,titleVBox,image1,image2,image3);
-        options.toFront(); // Bring options to the front
-        //Set the scene
+        menu.getChildren().addAll(options, titleVBox, image1, image2, image3);
+        options.toFront();
         window.setScene(titleScene);
-        //Display the stage
         window.show();
     }
 
+    /**
+     * Closes the program.
+     */
     private void closeProgram() {
-        //handling closing the program by giving an alert
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
         alert.setHeaderText("Confirm Exit");
@@ -154,11 +159,24 @@ public class TitleScreen extends Application {
             }
         });
     }
+    /**
+     * Creates a VBox containing various game options such as player names, final score, racket dimensions,
+     * serialization toggle, and buttons to start the game or exit.
+     *
+     * @return The VBox containing all game options.
+     */
     private VBox createGameOptions() {
         // Create a VBox to hold all the game options
         VBox optionsSelection = new VBox();
         optionsSelection.setSpacing(10);
-        optionsSelection.setAlignment(Pos.CENTER); // Align options to the left side
+        optionsSelection.setAlignment(Pos.CENTER); // Align options to the center
+
+        toggleSerializationButton = new ToggleButton("Use Serialized Data");
+        toggleSerializationButton.setSelected(false); // Default: Use serialized data
+        toggleSerializationButton.setOnAction(e -> {
+            // Toggle between using serialized data and not using it
+            toggleSerializationButton.isSelected();
+        });
 
         // Create an HBox for entering Player 1 name
         HBox player1Box = new HBox();
@@ -171,6 +189,10 @@ public class TitleScreen extends Application {
         p1btn.setOnAction(e -> {
             String name = p1Name.getText();
             player1.setName(name);
+            // Check if the name is longer than 10 characters
+            if(player1.getName().length() > 10){
+                player1.setName("Player 1"); // Default value
+            }
         });
         player1Box.getChildren().addAll(p1Name, p1btn);
 
@@ -185,6 +207,10 @@ public class TitleScreen extends Application {
         p2btn.setOnAction(e -> {
             String name = p2Name.getText();
             player2.setName(name);
+            // Check if the name is longer than 10 characters
+            if(player2.getName().length() > 10){
+                player2.setName("Player 2"); // Default value
+            }
         });
         player2Box.getChildren().addAll(p2Name, p2btn);
 
@@ -200,6 +226,11 @@ public class TitleScreen extends Application {
                 int score = Integer.parseInt(setScore.getText());
                 player1.setFinalscore(score); // Update the final score
                 player2.setFinalscore(score); // Update the final score
+                // Check that the player score is greater than 0
+                if (player1.getFinalscore() < 1 || player2.getFinalscore() < 1){
+                    player1.setFinalscore(5); // Default value
+                    player2.setFinalscore(5); // Default value
+                }
             } catch (NumberFormatException ex) {
                 System.out.println("Invalid score format");
             }
@@ -217,7 +248,11 @@ public class TitleScreen extends Application {
             try {
                 int height = Integer.parseInt(setHeight.getText());
                 racket.setRacketHeight(height);
-                System.out.println("Height set to: " + height);
+                // Check if the racket height is within the limit
+                if (height >= 500 || height <= 100){
+                    racket.setRacketHeight(400); // Default value
+                }
+
             } catch (NumberFormatException ex) {
                 System.out.println("Invalid height format");
             }
@@ -235,7 +270,10 @@ public class TitleScreen extends Application {
             try {
                 int width = Integer.parseInt(setWidth.getText());
                 racket.setRacketWidth(width);
-                System.out.println("Width set to: " + width);
+                // Check if the racket width is within the limit
+                if (racket.getRacketWidth() >=30 || racket.getRacketWidth() <= 10){
+                    racket.setRacketWidth(20); // Default value
+                }
             } catch (NumberFormatException ex) {
                 System.out.println("Invalid height format");
             }
@@ -243,7 +281,7 @@ public class TitleScreen extends Application {
         setWidthBox.getChildren().addAll(setWidth, widthbtn);
 
         // Add all the HBoxes to the VBox
-        optionsSelection.getChildren().addAll(player1Box, player2Box, setScoreBox, setHeightBox, setWidthBox);
+        optionsSelection.getChildren().addAll(toggleSerializationButton,player1Box, player2Box, setScoreBox, setHeightBox, setWidthBox);
 
         // Create an HBox to hold combo boxes for additional game options
         HBox optionsHBox = new HBox();
@@ -260,7 +298,7 @@ public class TitleScreen extends Application {
         switchButton.setOnAction(e -> {
             window.hide();
             // Pass instances of Player, Ball, and Racket to GameScreen constructor
-            new GameScreen(player1, player2, ball, racket).start(new Stage());
+            new GameScreen(player1, player2, ball, racket,toggleSerializationButton.isSelected()).start(new Stage());
         });
         Button exitButton = new Button("Exit");
         exitButton.setOnAction(e -> closeProgram());
@@ -276,6 +314,14 @@ public class TitleScreen extends Application {
         return optionsSelection; // Return the VBox containing all game options
     }
 
+    /**
+     * Creates a VBox containing a dropdown menu for selecting the speed of the ball.
+     * This method initializes a ComboBox with options for "Slow", "Medium", and "Fast".
+     * The default speed is set to "Slow". Upon selection of a speed option, the corresponding
+     * speed value is set to the associated ball object.
+     *
+     * @return The VBox containing the speed selection dropdown menu.
+     */
     private VBox createSpeedComboBox() {
         //Create a dropdown menu for selecting the speed of the ball
         ComboBox<String> speedComboBox = new ComboBox<>();
@@ -301,6 +347,16 @@ public class TitleScreen extends Application {
         vbox.getChildren().addAll(new Label("Select Speed:"), speedComboBox);
         return vbox;
     }
+
+    /**
+     * Creates a VBox containing a dropdown menu for selecting the speed increase options.
+     * This method initializes a ComboBox with options for increasing speed after "Every Bounce",
+     * "Every 2 Bounces", and "Every 3 Bounces". The default option is set to "Every Bounce".
+     * Upon selection of a speed increase option, the corresponding value is set to the associated
+     * ball object.
+     *
+     * @return The VBox containing the speed increase selection dropdown menu.
+     */
 
     private VBox createSpeedIncreaseComboBox() {
         //Create a dropdown menu for selecting the speed increase options
