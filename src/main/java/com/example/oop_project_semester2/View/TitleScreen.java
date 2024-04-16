@@ -34,7 +34,6 @@ public class TitleScreen extends Application {
     private TextField setHeight;
     private TextField setWidth;
 
-    private ToggleButton toggleSerializationButton;
 
     /**
      * The main method to launch the application.
@@ -161,7 +160,7 @@ public class TitleScreen extends Application {
     }
     /**
      * Creates a VBox containing various game options such as player names, final score, racket dimensions,
-     * serialization toggle, and buttons to start the game or exit.
+     * and buttons to start the game or exit.
      *
      * @return The VBox containing all game options.
      */
@@ -170,13 +169,6 @@ public class TitleScreen extends Application {
         VBox optionsSelection = new VBox();
         optionsSelection.setSpacing(10);
         optionsSelection.setAlignment(Pos.CENTER); // Align options to the center
-
-        toggleSerializationButton = new ToggleButton("Use Serialized Data");
-        toggleSerializationButton.setSelected(false); // Default: Use serialized data
-        toggleSerializationButton.setOnAction(e -> {
-            // Toggle between using serialized data and not using it
-            toggleSerializationButton.isSelected();
-        });
 
         // Create an HBox for entering Player 1 name
         HBox player1Box = new HBox();
@@ -281,7 +273,7 @@ public class TitleScreen extends Application {
         setWidthBox.getChildren().addAll(setWidth, widthbtn);
 
         // Add all the HBoxes to the VBox
-        optionsSelection.getChildren().addAll(toggleSerializationButton,player1Box, player2Box, setScoreBox, setHeightBox, setWidthBox);
+        optionsSelection.getChildren().addAll(player1Box, player2Box, setScoreBox, setHeightBox, setWidthBox);
 
         // Create an HBox to hold combo boxes for additional game options
         HBox optionsHBox = new HBox();
@@ -298,7 +290,7 @@ public class TitleScreen extends Application {
         switchButton.setOnAction(e -> {
             window.hide();
             // Pass instances of Player, Ball, and Racket to GameScreen constructor
-            new GameScreen(player1, player2, ball, racket,toggleSerializationButton.isSelected()).start(new Stage());
+            new GameScreen(player1, player2, ball, racket).start(new Stage());
         });
         Button exitButton = new Button("Exit");
         exitButton.setOnAction(e -> closeProgram());

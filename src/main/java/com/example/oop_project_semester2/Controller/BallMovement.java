@@ -8,6 +8,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -20,6 +22,7 @@ public class BallMovement {
     private double ballXSpeed; // Variable to track the speed along the x-axis
     private double ballYSpeed; // Variable to track the speed along the y-axis
 
+    private List<Thread> threads = new ArrayList<>();
 
     /**
      * Start ball movement thread.
@@ -33,14 +36,13 @@ public class BallMovement {
      * @param player2       the player 2
      * @param player1Score  the score of player 1
      * @param player2Score  the score of player 2
-     * @param scoreMessage  the score message
+     * @param popUp         the messages that pop up during the game
      * @param finalScore    the final score
-     * @param winnerMessage the winner message
      */
 // Method to start the ball movement thread
     public void startBallMovementThread(Scene scene, ImageView pongball, Rectangle racket1, Rectangle racket2,
                                         Ball ballSpeed, Player player1, Player player2, Text player1Score,
-                                        Text player2Score, Text scoreMessage, int finalScore, Text winnerMessage) {
+                                        Text player2Score, Text popUp, int finalScore) {
 
         // Creating a new thread for ball movement
         // If the game is not over the thread continues, otherwise it ends
@@ -48,7 +50,6 @@ public class BallMovement {
             Thread ballMovementThread = new Thread(() -> {
                 ballXSpeed = ballSpeed.getBallSpeed(); // Initial speed of the ball along the x-axis
                 ballYSpeed = ballSpeed.getBallSpeed(); // Initial speed of the ball along the y-axis
-
 
                 // Variable created for the rotation of the ball
                 final AtomicReference<Double> i = new AtomicReference<>((double) 0);
@@ -180,7 +181,7 @@ public class BallMovement {
                         if (newBallX <= -50 || newBallX >= scene.getWidth() + 50) {
                             // Update players' scores and display a message showing who scored
                             Scoring.checkAndUpdateScore(newBallX, scene.getWidth(), player1, player2,
-                                    player1Score, player2Score, scoreMessage, finalScore);
+                                    player1Score, player2Score, popUp, finalScore);
 
 
                                 // Check if any player has reached the final score
@@ -188,14 +189,14 @@ public class BallMovement {
                                     // End the game
                                     Platform.runLater(() -> {
                                         // Display winner message
-                                        winnerMessage.setText(player1.getName() + " wins!");
+                                        popUp.setText(player1.getName() + " wins!");
                                     });
                                     return; // Exit the thread
                                 } else if (player2.getPlayerScore() >= finalScore) {
                                     // End the game
                                     Platform.runLater(() -> {
                                         // Display winner message
-                                        winnerMessage.setText(player2.getName() + " wins!");
+                                        popUp.setText(player2.getName() + " wins!");
                                     });
                                     return; // Exit the thread
                                 }
@@ -225,25 +226,23 @@ public class BallMovement {
                         Thread.sleep(10);
                     } catch (InterruptedException e) {
                         System.out.println("Thread interrupted: " + e.getMessage());
-                    }
-
-                    // Check if the game is paused
-                    synchronized (this) {
-                        while (isPaused) {
-                            try {
-                                wait(); // Wait until resumed
-                            } catch (InterruptedException e) {
-                                System.out.println("Thread interrupted: " + e.getMessage());
-                            }
-                        }
+                        break;
                     }
                 }
             });
+
+            threads.add(ballMovementThread);
 
             // Set the thread as daemon and start it
             ballMovementThread.setDaemon(true);
             ballMovementThread.start();
         }
+    }
+    public void stopThreads() {
+        for (Thread t : threads)
+            t.interrupt();
+
+        threads.clear();
     }
 
     /**
@@ -304,5 +303,11 @@ public class BallMovement {
     private boolean isGameEnded(Player player1, Player player2) {
         return player1.getPlayerScore() >= player1.getFinalscore() || player2.getPlayerScore() >= player2.getFinalscore();
     }
+
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+
 
 }

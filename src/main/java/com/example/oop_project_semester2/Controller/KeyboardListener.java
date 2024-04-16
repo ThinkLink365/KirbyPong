@@ -1,5 +1,7 @@
 package com.example.oop_project_semester2.Controller;
 
+import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
@@ -54,6 +56,7 @@ public class KeyboardListener {
             }
         });
     }
+
     /**
      * Check if a key is released.
      *
@@ -95,4 +98,30 @@ public class KeyboardListener {
             }
         });
     }
+
+    public void PauseGame(Stage stage, BallMovement ballMovement, RacketMovement racketMovement, Button restartButton,Button saveButton, Button loadButton) {
+        // Add event handler for key pressed events
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.P) {
+                if (!ballMovement.isPaused()) { // Check if the game is not already paused
+                    // If game is not paused, pause the game
+                    ballMovement.pauseBallMovementThread();
+                    racketMovement.pauseRacketMovementThread();
+                    racketMovement.pauseRacketMovementThread();
+                    restartButton.setVisible(true); // Show restart button
+                    saveButton.setVisible(true); // Show save button
+                    loadButton.setVisible(true); // Show load button
+                } else {
+                    // If game is already paused, resume the game
+                    ballMovement.resumeBallMovementThread();
+                    racketMovement.resumeRacketMovementThread();
+                    racketMovement.resumeRacketMovementThread();
+                    restartButton.setVisible(false); // Hide restart button
+                    saveButton.setVisible(false); // Hide save button
+                    loadButton.setVisible(false); // Hide load button
+                }
+            }
+        });
+    }
+
 }

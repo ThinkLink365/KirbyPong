@@ -4,6 +4,8 @@ import com.example.oop_project_semester2.Model.Player;
 import javafx.application.Platform;
 import javafx.scene.shape.Rectangle;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -12,6 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RacketMovement {
 
     private boolean isPaused = false; // Variable to track pause state
+
+    private List<Thread> threads = new ArrayList<>();
 
     /**
      * Move the racket at a given speed.
@@ -27,7 +31,7 @@ public class RacketMovement {
             double newY = racket.getTranslateY() + speed;
 
             // Ensure the racket stays within the set boundaries
-            newY = Math.min(sceneHeight - racketHeight - 135, Math.max(0, newY));
+            newY = Math.min(sceneHeight - racketHeight - 112, Math.max(0, newY));
 
             // Set the new position of the racket
             racket.setTranslateY(newY);
@@ -49,6 +53,7 @@ public class RacketMovement {
         Thread racketMovementThread = new Thread(() -> {
             // Continuous loop for updating racket position
             while (true) {
+
                 // If the game is not paused then run the thread, otherwise stop it
                 if (!isPaused) {
                     // Update racket position on the UI thread
@@ -59,29 +64,29 @@ public class RacketMovement {
                     Thread.sleep(10); // Adjust this value for desired speed
                 } catch (InterruptedException e) {
                     System.out.println("Thread interrupted: " + e.getMessage());
-                }
-
-                // Check if the game is paused
-                synchronized (this) {
-                    while (isPaused) {
-                        try {
-                            wait(); // Wait until resumed
-                        } catch (InterruptedException e) {
-                            System.out.println("Thread interrupted: " + e.getMessage());
-                        }
-                    }
+                    break;
                 }
 
                 // Check if the game has ended
-                if (isGameEnded(player1,player2)) {
+                if (isGameEnded(player1, player2)) {
                     return; // Exit the loop if the game has ended
                 }
             }
         });
 
+        threads.add(racketMovementThread);
+
+
         // Set the thread as daemon and start it
         racketMovementThread.setDaemon(true);
         racketMovementThread.start();
+    }
+
+    public void stopThreads() {
+        for (Thread t : threads)
+            t.interrupt();
+
+        threads.clear();
     }
 
     /**

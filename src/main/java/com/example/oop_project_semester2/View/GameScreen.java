@@ -1,11 +1,13 @@
 package com.example.oop_project_semester2.View;
 
 import com.example.oop_project_semester2.Controller.BallMovement;
+import com.example.oop_project_semester2.Controller.GameStateSerializer;
 import com.example.oop_project_semester2.Controller.KeyboardListener;
 import com.example.oop_project_semester2.Controller.RacketMovement;
 import com.example.oop_project_semester2.Model.Ball;
 import com.example.oop_project_semester2.Model.Player;
 import com.example.oop_project_semester2.Model.Racket;
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -21,6 +23,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -41,8 +44,6 @@ public class GameScreen extends Application implements Serializable {
 
     private final RacketMovement racketMovement;
 
-    private Button restartButton;
-
     private Text playerScore1;
 
     private Text playerScore2;
@@ -55,20 +56,13 @@ public class GameScreen extends Application implements Serializable {
     private AtomicInteger p1RacketSpeed;
     private AtomicInteger p2RacketSpeed;
 
-    private Text scoreMessage;
-
-    private Text endMessage;
+    private Text playerName1;
+    private Text playerName2;
+    private Text popUp;
 
     private Scene scene;
 
-    private boolean isPaused = false; // Track if the game is paused
-
     private boolean restart = false; // Track if the game needs to be restarted
-
-
-    private  final String SAVE_FILE = "file.ser";
-
-
 
     /**
      * Instantiates a new Game screen.
@@ -77,10 +71,9 @@ public class GameScreen extends Application implements Serializable {
      * @param player2           player 2
      * @param ball              the ball
      * @param racket            the racket
-     * @param useSerializedData flag indicating whether to use serialized data for game state
      */
 // Constructor to initialize the game screen with players, ball, and racket
-    public GameScreen(Player player1, Player player2, Ball ball, Racket racket, boolean useSerializedData) {
+    public GameScreen(Player player1, Player player2, Ball ball, Racket racket) {
         this.player1 = player1;
         this.player2 = player2;
         this.ball = ball;
@@ -88,10 +81,6 @@ public class GameScreen extends Application implements Serializable {
         // Initialize ballMovement and racketMovement
         this.ballMovement = new BallMovement();
         this.racketMovement = new RacketMovement();
-        // Load game state if useSerializedData is true
-        if (useSerializedData) {
-                loadGameState();
-        }
     }
 
     /**
@@ -129,29 +118,33 @@ public class GameScreen extends Application implements Serializable {
         exitButton.setOnAction(e -> closeProgram()); // Set action for exit button
         exitButton.setFocusTraversable(false); // Disable focus traversal for exit button
 
-        // Create pause button
-        Button pauseButton = new Button("Pause");
-        pauseButton.setOnAction(e -> togglePause()); // Set action for pause button
-        pauseButton.setFocusTraversable(false);// Disable focus traversal for pause button
+        // Create save button
+        Button saveButton = new Button("Save Game");
+        saveButton.setOnAction(e -> saveGameState()); // Set action for pause button
+        saveButton.setFocusTraversable(false);// Disable focus traversal for pause button
+        saveButton.setVisible(false);
+
+        // Create Load button
+        Button loadButton = new Button("Load Game");
+        loadButton.setOnAction(e -> loadGameState() ); // Set action for pause button
+        loadButton.setFocusTraversable(false);// Disable focus traversal for pause button
+        loadButton.setVisible(false);
+
 
         // Create restart button
-        restartButton = new Button("Restart");
+        Button restartButton = new Button("Restart");
         restartButton.setOnAction(e -> restartGame()); // Set action for restart button
         restartButton.setFocusTraversable(false);// Disable focus traversal for restart button
         restartButton.setVisible(false);
 
 
         // Set up player details, score message and end message
-        scoreMessage = new Text();
-        scoreMessage.setFill(Color.WHITE);
-        scoreMessage.setFont(Font.font("Arial", FontWeight.BOLD, 50));
-
-        endMessage = new Text();
-        endMessage.setFill(Color.WHITE);
-        endMessage.setFont(Font.font("Arial", FontWeight.BOLD, 50));
+        popUp = new Text();
+        popUp.setFill(Color.WHITE);
+        popUp.setFont(Font.font("Arial", FontWeight.BOLD, 50));
 
         // Player 1 details
-        Text playerName1 = new Text(player1.getName());
+        playerName1 = new Text(player1.getName());
         playerName1.setFont(Font.font("Arial", FontWeight.BOLD, 50));
         playerName1.setFill(Color.WHITE);
         playerScore1 = new Text(player1.getPlayerScore() + "");
@@ -159,7 +152,7 @@ public class GameScreen extends Application implements Serializable {
         playerScore1.setFill(Color.WHITE);
 
         // Player 2 details
-        Text playerName2 = new Text(player2.getName());
+        playerName2 = new Text(player2.getName());
         playerName2.setFont(Font.font("Arial", FontWeight.BOLD, 50));
         playerName2.setFill(Color.WHITE);
         playerScore2 = new Text(player2.getPlayerScore() + "");
@@ -174,10 +167,14 @@ public class GameScreen extends Application implements Serializable {
         VBox player2Detail = new VBox(playerName2, playerScore2);
         player2Detail.setAlignment(Pos.TOP_RIGHT);
 
-        // Create VBox for score message and buttons
-        VBox detailsPane = new VBox(exitButton,pauseButton,restartButton,scoreMessage);
-        detailsPane.setAlignment(Pos.CENTER);
+        // Create HBox for save, load, and restart buttons
+        HBox buttonsBox = new HBox(saveButton, loadButton, restartButton);
+        buttonsBox.setAlignment(Pos.CENTER);
+        buttonsBox.setSpacing(20); // Adjust the spacing between buttons as needed
 
+        // Create VBox for score message and buttons
+        VBox detailsPane = new VBox(exitButton, buttonsBox, popUp);
+        detailsPane.setAlignment(Pos.CENTER);
 
         // BorderPane for the top section containing exit button and player details
         BorderPane topPane = new BorderPane();
@@ -191,10 +188,16 @@ public class GameScreen extends Application implements Serializable {
         racket1.setStrokeWidth(5);
         racket1.setStroke(Color.PURPLE);
 
+        // Set the initial position of racket1
+        racket1.setTranslateY(racket.getRacketHeight() - racket.getRacketHeight() / 2); // Adjusted position
+
         racket2 = new Rectangle(racket.getRacketWidth(), racket.getRacketHeight());
         racket2.setFill(Color.HOTPINK);
         racket2.setStrokeWidth(5);
         racket2.setStroke(Color.PURPLE);
+
+        // Set the initial position of racket2
+        racket2.setTranslateY(racket.getRacketHeight() - racket.getRacketHeight() / 2); // Adjusted position
 
         // Set up ball
         pongball = ball.getImage();
@@ -210,7 +213,6 @@ public class GameScreen extends Application implements Serializable {
         root.setLeft(racket1); // Set left racket
         root.setRight(racket2); // Set right racket
         root.setTop(topPane); // Set the top section BorderPane
-        root.setCenter(endMessage); // Set the endMessage to the center
         root.getChildren().add(pongball); // Add the ball to root
 
         scene = new Scene(root, 800, 800);
@@ -227,12 +229,13 @@ public class GameScreen extends Application implements Serializable {
         keyboardListener.RacketMovingP2(window, p2RacketSpeed);
         keyboardListener.RacketStopP1(window, p1RacketSpeed);
         keyboardListener.RacketStopP2(window, p2RacketSpeed);
+        keyboardListener.PauseGame(window, ballMovement, racketMovement, restartButton, saveButton,loadButton);
 
         // Start threads for racket movement and ball movement
         racketMovement.startRacketMovementThread(racket1, p1RacketSpeed, scene.getHeight(), racket.getRacketHeight(),player1,player2);
         racketMovement.startRacketMovementThread(racket2, p2RacketSpeed, scene.getHeight(), racket.getRacketHeight(),player1,player2);
+        ballMovement.startBallMovementThread(scene, pongball, racket1, racket2, ball, player1, player2, playerScore1, playerScore2, popUp, player1.getFinalscore());
 
-        ballMovement.startBallMovementThread(scene, pongball, racket1, racket2, ball, player1, player2, playerScore1, playerScore2, scoreMessage, player1.getFinalscore(), endMessage);
 
     }
 
@@ -250,7 +253,6 @@ public class GameScreen extends Application implements Serializable {
         // Wait for user response in the confirmation dialog
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                saveGameState(); // Serialize the game when the user exits for future use
                 window.close(); // Close the window if user confirms
             }
         });
@@ -262,18 +264,14 @@ public class GameScreen extends Application implements Serializable {
      * In case of any error during serialization, the stack trace is printed.
      */
     private void saveGameState() {
-        try {
-            FileOutputStream file = new FileOutputStream(SAVE_FILE);
-            ObjectOutputStream out = new ObjectOutputStream(file);
-            out.writeObject(player1);
-            out.writeObject(player2);
-            out.writeObject(ball);
-            out.writeObject(racket);
-            out.close();
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        GameStateSerializer.getInstance().saveGameState(player1,player2,ball,racket);
+        popUp.setText("Game saved!");
+
+        // Fade out the message after a delay
+        FadeTransition fadeOutTransition = new FadeTransition(Duration.seconds(2), popUp);
+        fadeOutTransition.setFromValue(1.0);
+        fadeOutTransition.setToValue(0.0);
+        fadeOutTransition.play();
     }
 
     /**
@@ -282,49 +280,105 @@ public class GameScreen extends Application implements Serializable {
      * In case of any error during deserialization, the stack trace is printed.
      */
     private void loadGameState() {
-        File savedFile = new File(SAVE_FILE);
-        if (!savedFile.exists()) {
-            System.out.println("Serialized data file does not exist. No data loaded.");
-            return;
-        }
+        GameStateSerializer gameStateSerializer = GameStateSerializer.getInstance();
+        GameScreen loadedGameData = gameStateSerializer.loadGameState();
 
-        try {
-            FileInputStream file = new FileInputStream(SAVE_FILE);
-            ObjectInputStream in = new ObjectInputStream(file);
-            player1 = (Player) in.readObject();
-            player2 = (Player) in.readObject();
-            ball = (Ball) in.readObject();
-            racket = (Racket) in.readObject();
-            in.close();
-            file.close();
-            ball.setImage(new ImageView("file:src/Kirby.png"));
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+
+            if (loadedGameData != null) {
+
+                // Log loaded game state for verification
+                System.out.println("Loaded Game State:");
+                System.out.println("Player 1 Name: " + loadedGameData.getPlayer1().getName());
+                System.out.println("Player 1 Score: " + loadedGameData.getPlayer1().getPlayerScore());
+                System.out.println("Player 1 Final Score: " + loadedGameData.getPlayer1().getFinalscore());
+
+                System.out.println("Player 2 Name: " + loadedGameData.getPlayer2().getName());
+                System.out.println("Player 2 Score: " + loadedGameData.getPlayer2().getPlayerScore());
+                System.out.println("Player 2 Final Score: " + loadedGameData.getPlayer2().getFinalscore());
+
+                System.out.println("Ball Speed Increase: " + loadedGameData.getBall().getSpeedIncrease());
+                System.out.println("Ball Speed: " + loadedGameData.getBall().getBallSpeed());
+
+                System.out.println("Racket Width: " + loadedGameData.getRacket().getRacketWidth());
+                System.out.println("Racket Height: " + loadedGameData.getRacket().getRacketHeight());
+
+                // Set player1 details
+                player1.setName(loadedGameData.getPlayer1().getName());
+                player1.setPlayerScore(loadedGameData.getPlayer1().getPlayerScore());
+                player1.setFinalscore(loadedGameData.getPlayer1().getFinalscore());
+
+                // Set player2 details
+                player2.setName(loadedGameData.getPlayer2().getName());
+                player2.setPlayerScore(loadedGameData.getPlayer2().getPlayerScore());
+                player2.setFinalscore(loadedGameData.getPlayer2().getFinalscore());
+
+                // Set the ball details
+                ball.setSpeedIncrease(loadedGameData.getBall().getSpeedIncrease());
+                ball.setBallSpeed(loadedGameData.getBall().getBallSpeed());
+
+                // Set the racket details
+                racket.setRacketWidth((loadedGameData.getRacket().getRacketWidth()));
+                racket.setRacketHeight((loadedGameData.getRacket().getRacketHeight()));
+
+                // Update UI elements with loaded data
+                playerName1.setText(player1.getName());
+                playerName2.setText(player2.getName());
+                playerScore1.setText(String.valueOf(player1.getPlayerScore()));
+                playerScore2.setText(String.valueOf(player2.getPlayerScore()));
+
+                // Update racket sizes
+                racket1.setWidth(racket.getRacketWidth());
+                racket1.setHeight(racket.getRacketHeight());
+                racket2.setWidth(racket.getRacketWidth());
+                racket2.setHeight(racket.getRacketHeight());
+
+                // Recenter the ball
+                double centerX = scene.getWidth() / 2 - pongball.getFitWidth() / 2;
+                double centerY = scene.getHeight() / 2 - pongball.getFitHeight() / 2;
+                pongball.setX(centerX);
+                pongball.setY(centerY);
+
+                // Stop old threads
+                racketMovement.stopThreads();
+                ballMovement.stopThreads();
+
+                // Begin new threads with loaded data
+                racketMovement.startRacketMovementThread(racket1, p1RacketSpeed, scene.getHeight(), racket.getRacketHeight(), player1, player2);
+                racketMovement.startRacketMovementThread(racket2, p2RacketSpeed, scene.getHeight(), racket.getRacketHeight(), player1, player2);
+                ballMovement.startBallMovementThread(scene, pongball, racket1, racket2, ball, player1, player2, playerScore1, playerScore2, popUp, player1.getFinalscore());
+
+                popUp.setText("Game loaded!"); // Display loaded game message
+
+                // Fade out the message after a delay
+                FadeTransition fadeOutTransition = new FadeTransition(Duration.seconds(2), popUp);
+                fadeOutTransition.setFromValue(1.0);
+                fadeOutTransition.setToValue(0.0);
+                fadeOutTransition.play();
+
+            } else {
+                // Handle case when loaded game state is null (e.g., file not found)
+                System.out.println("Failed to load game state.");
+            }
     }
 
-    /**
-     * Toggles the pause state of the game.
-     * Pauses or resumes ball and racket movement threads accordingly.
-     * Also toggles the visibility of the restart button.
-     */
-    private void togglePause() {
-        isPaused = !isPaused; // Toggle pause state
-
-        // If game is paused, stop ball movement thread
-        if (isPaused) {
-            ballMovement.pauseBallMovementThread();
-            racketMovement.pauseRacketMovementThread();
-            racketMovement.pauseRacketMovementThread();
-            restartButton.setVisible(true); // Show restart button
-        } else { // If game is resumed, start ball movement thread
-            ballMovement.resumeBallMovementThread();
-            racketMovement.resumeRacketMovementThread();
-            racketMovement.resumeRacketMovementThread();
-            restartButton.setVisible(false); // Hide restart button
-        }
+    public Player getPlayer1() {
+        return player1;
     }
 
+    // Getter for player2
+    public Player getPlayer2() {
+        return player2;
+    }
+
+    // Getter for ball
+    public Ball getBall() {
+        return ball;
+    }
+
+    // Getter for racket
+    public Racket getRacket() {
+        return racket;
+    }
     /**
      * Restarts the game by resetting player scores, restarting the ball movement,
      * and restarting the racket movement threads.
@@ -334,16 +388,20 @@ public class GameScreen extends Application implements Serializable {
         restart = !restart;
 
         if (restart) {
+            playerName1.setText(player1.getName());
+            playerName2.setText(player2.getName());
             player1.setPlayerScore(0);// Set the score of player 1 to 0
             player2.setPlayerScore(0);// Set the score of player 2 to 0
             playerScore1.setText(player1.getPlayerScore() + ""); // Update the player scores to reflect the change
             playerScore2.setText(player2.getPlayerScore() + "");
-            ballMovement.restartBall(pongball, ball, scene, endMessage);// Restart the ball
+            ballMovement.restartBall(pongball, ball, scene, popUp);// Restart the ball
 
             // Restart ball and racket movement threads
+            racketMovement.stopThreads();
+            ballMovement.stopThreads();
             racketMovement.startRacketMovementThread(racket1, p1RacketSpeed, scene.getHeight(), racket.getRacketHeight(), player1, player2);
             racketMovement.startRacketMovementThread(racket2, p2RacketSpeed, scene.getHeight(), racket.getRacketHeight(), player1, player2);
-            ballMovement.startBallMovementThread(scene, pongball, racket1, racket2, ball, player1, player2, playerScore1, playerScore2, scoreMessage, player1.getFinalscore(), endMessage);
+            ballMovement.startBallMovementThread(scene, pongball, racket1, racket2, ball, player1, player2, playerScore1, playerScore2, popUp, player1.getFinalscore());
         }
     }
 }
