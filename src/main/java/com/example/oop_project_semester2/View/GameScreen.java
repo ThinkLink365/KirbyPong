@@ -1,9 +1,6 @@
 package com.example.oop_project_semester2.View;
 
-import com.example.oop_project_semester2.Controller.BallMovement;
-import com.example.oop_project_semester2.Controller.GameStateSerializer;
-import com.example.oop_project_semester2.Controller.KeyboardListener;
-import com.example.oop_project_semester2.Controller.RacketMovement;
+import com.example.oop_project_semester2.Controller.*;
 import com.example.oop_project_semester2.Model.Ball;
 import com.example.oop_project_semester2.Model.Player;
 import com.example.oop_project_semester2.Model.Racket;
@@ -130,13 +127,23 @@ public class GameScreen extends Application implements Serializable {
         loadButton.setFocusTraversable(false);// Disable focus traversal for pause button
         loadButton.setVisible(false);
 
-
         // Create restart button
         Button restartButton = new Button("Restart");
         restartButton.setOnAction(e -> restartGame()); // Set action for restart button
         restartButton.setFocusTraversable(false);// Disable focus traversal for restart button
         restartButton.setVisible(false);
 
+        // Create save to database button
+        Button dbSaveButton = new Button("Save to DB");
+        dbSaveButton.setOnAction(e -> saveToDB()); // Set action for restart button
+        dbSaveButton.setFocusTraversable(false);// Disable focus traversal for restart button
+        dbSaveButton.setVisible(false);
+
+        // Create load from database button
+        Button dbLoadButton = new Button("Load from DB");
+        dbLoadButton.setOnAction(e -> loadFromDB()); // Set action for restart button
+        dbLoadButton.setFocusTraversable(false);// Disable focus traversal for restart button
+        dbLoadButton.setVisible(false);
 
         // Set up player details, score message and end message
         popUp = new Text();
@@ -168,7 +175,7 @@ public class GameScreen extends Application implements Serializable {
         player2Detail.setAlignment(Pos.TOP_RIGHT);
 
         // Create HBox for save, load, and restart buttons
-        HBox buttonsBox = new HBox(saveButton, loadButton, restartButton);
+        HBox buttonsBox = new HBox(saveButton, loadButton, restartButton, dbSaveButton, dbLoadButton);
         buttonsBox.setAlignment(Pos.CENTER);
         buttonsBox.setSpacing(20); // Adjust the spacing between buttons as needed
 
@@ -229,7 +236,7 @@ public class GameScreen extends Application implements Serializable {
         keyboardListener.RacketMovingP2(window, p2RacketSpeed);
         keyboardListener.RacketStopP1(window, p1RacketSpeed);
         keyboardListener.RacketStopP2(window, p2RacketSpeed);
-        keyboardListener.PauseGame(window, ballMovement, racketMovement, restartButton, saveButton,loadButton);
+        keyboardListener.PauseGame(window, ballMovement, racketMovement, restartButton, saveButton,loadButton,dbSaveButton,dbLoadButton);
 
         // Start threads for racket movement and ball movement
         racketMovement.startRacketMovementThread(racket1, p1RacketSpeed, scene.getHeight(), racket.getRacketHeight(),player1,player2);
@@ -283,25 +290,7 @@ public class GameScreen extends Application implements Serializable {
         GameStateSerializer gameStateSerializer = GameStateSerializer.getInstance();
         GameScreen loadedGameData = gameStateSerializer.loadGameState();
 
-
             if (loadedGameData != null) {
-
-                // Log loaded game state for verification
-                System.out.println("Loaded Game State:");
-                System.out.println("Player 1 Name: " + loadedGameData.getPlayer1().getName());
-                System.out.println("Player 1 Score: " + loadedGameData.getPlayer1().getPlayerScore());
-                System.out.println("Player 1 Final Score: " + loadedGameData.getPlayer1().getFinalscore());
-
-                System.out.println("Player 2 Name: " + loadedGameData.getPlayer2().getName());
-                System.out.println("Player 2 Score: " + loadedGameData.getPlayer2().getPlayerScore());
-                System.out.println("Player 2 Final Score: " + loadedGameData.getPlayer2().getFinalscore());
-
-                System.out.println("Ball Speed Increase: " + loadedGameData.getBall().getSpeedIncrease());
-                System.out.println("Ball Speed: " + loadedGameData.getBall().getBallSpeed());
-
-                System.out.println("Racket Width: " + loadedGameData.getRacket().getRacketWidth());
-                System.out.println("Racket Height: " + loadedGameData.getRacket().getRacketHeight());
-
                 // Set player1 details
                 player1.setName(loadedGameData.getPlayer1().getName());
                 player1.setPlayerScore(loadedGameData.getPlayer1().getPlayerScore());
@@ -404,4 +393,72 @@ public class GameScreen extends Application implements Serializable {
             ballMovement.startBallMovementThread(scene, pongball, racket1, racket2, ball, player1, player2, playerScore1, playerScore2, popUp, player1.getFinalscore());
         }
     }
+    /**
+     * Saves the game information for both players to the database.
+     * Displays a confirmation message and fades it out after a delay.
+     */
+    private void saveToDB() {
+        // Create an instance of DBGameInfoImpl to save game information to the database
+        DBGameInfoImpl dbGameInfo = new DBGameInfoImpl();
+        dbGameInfo.saveGameInfo(player1, player2);
+
+        // Display game saved message
+        popUp.setText("Saved to Database");
+
+        // Fade out the message after a delay
+        FadeTransition fadeOutTransition = new FadeTransition(Duration.seconds(2), popUp);
+        fadeOutTransition.setFromValue(1.0);
+        fadeOutTransition.setToValue(0.0);
+        fadeOutTransition.play();
+    }
+
+    /**
+     * Loads the game information for both players from the database.
+     * Updates UI elements with the loaded data, starts ball movement thread, and displays a confirmation message.
+     * Fades out the message after a delay.
+     */
+    private void loadFromDB() {
+        // Create an instance of DBGameInfoImpl to load game information from the database
+        DBGameInfoImpl dbGameInfo = new DBGameInfoImpl();
+
+        // Create builders for player 1 and player 2
+        Builder player1Builder = new Builder();
+        Builder player2Builder = new Builder();
+
+        // Load game information from the database
+        dbGameInfo.loadGameInfo(player1Builder, player2Builder);
+
+        // Build Player objects from the loaded data
+        player1 = player1Builder.build();
+        player2 = player2Builder.build();
+
+        // Update UI elements with loaded data for both players
+        playerName1.setText(player1.getName());
+        playerName2.setText(player2.getName());
+        playerScore1.setText(String.valueOf(player1.getPlayerScore()));
+        playerScore2.setText(String.valueOf(player2.getPlayerScore()));
+
+        // Start ball movement thread
+        ballMovement.stopThreads();
+        ballMovement.startBallMovementThread(scene, pongball, racket1, racket2, ball, player1, player2, playerScore1, playerScore2, popUp, player1.getFinalscore());
+
+        // Recenter the ball
+        double centerX = scene.getWidth() / 2 - pongball.getFitWidth() / 2;
+        double centerY = scene.getHeight() / 2 - pongball.getFitHeight() / 2;
+        pongball.setX(centerX);
+        pongball.setY(centerY);
+
+        System.out.println("Game data loaded from database successfully.");
+
+        // Display loaded game message
+        popUp.setText("Loaded from Database");
+
+        // Fade out the message after a delay
+        FadeTransition fadeOutTransition = new FadeTransition(Duration.seconds(2), popUp);
+        fadeOutTransition.setFromValue(1.0);
+        fadeOutTransition.setToValue(0.0);
+        fadeOutTransition.play();
+    }
+
+
 }

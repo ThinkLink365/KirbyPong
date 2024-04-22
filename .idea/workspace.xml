@@ -4,16 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a4e15bc3-b15f-4665-938a-e24f4e0ab097" name="Changes" comment="Added serialization, javadoc comments and cleaned up some underlying issues. Phase 3 complete">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Controller/GameStateSerializer.java" afterDir="false" />
+    <list default="true" id="a4e15bc3-b15f-4665-938a-e24f4e0ab097" name="Changes" comment="Changed pausing to be key press (P). Added options to save and load game using serialization that uses singleton design pattern.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Controller/Builder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Controller/DBGameInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Controller/DBGameInfoImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Controller/DatabaseManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Controller/BallMovement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Controller/BallMovement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Controller/KeyboardListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Controller/KeyboardListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Controller/RacketMovement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Controller/RacketMovement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Controller/Scoring.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Controller/Scoring.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Model/Racket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/Model/Racket.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/View/GameScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/View/GameScreen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/View/TitleScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/oop_project_semester2/View/TitleScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +28,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaFXApplication" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -54,8 +56,8 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/liamo/OneDrive - mycit.ie/Desktop/Year 2/Semester 2/OOP/R00230462_OOP_Phase3/OOP_Project_Semester2&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/liamo/Downloads/mysql-connector-j-8.0.33/mysql-connector-j-8.0.33/mysql-connector-j-8.0.33.jar&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
@@ -175,7 +177,14 @@
       <option name="project" value="LOCAL" />
       <updated>1711145377041</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Changed pausing to be key press (P). Added options to save and load game using serialization that uses singleton design pattern.">
+      <created>1713260793264</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1713260793264</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -202,7 +211,8 @@
     <MESSAGE value="Tidied up some code. Phase 2 Done" />
     <MESSAGE value="End of game, pausing, restarting(without serialization), ball speed increase added." />
     <MESSAGE value="Added serialization, javadoc comments and cleaned up some underlying issues. Phase 3 complete" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added serialization, javadoc comments and cleaned up some underlying issues. Phase 3 complete" />
+    <MESSAGE value="Changed pausing to be key press (P). Added options to save and load game using serialization that uses singleton design pattern." />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed pausing to be key press (P). Added options to save and load game using serialization that uses singleton design pattern." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

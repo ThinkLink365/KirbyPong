@@ -99,7 +99,18 @@ public class KeyboardListener {
         });
     }
 
-    public void PauseGame(Stage stage, BallMovement ballMovement, RacketMovement racketMovement, Button restartButton,Button saveButton, Button loadButton) {
+    /**
+     * Pauses or resumes the game when the 'P' key is pressed.
+     * @param stage the stage.
+     * @param ballMovement the object responsible for ball movement.
+     * @param racketMovement the object responsible for racket movement.
+     * @param restartButton the button to restart the game.
+     * @param saveButton the button to save the game.
+     * @param loadButton the button to load a saved game.
+     * @param dbSaveButton the button to save the game to the database.
+     * @param dbLoadButton the button to load a saved game from the database.
+     */
+    public void PauseGame(Stage stage, BallMovement ballMovement, RacketMovement racketMovement, Button restartButton, Button saveButton, Button loadButton, Button dbSaveButton, Button dbLoadButton) {
         // Add event handler for key pressed events
         stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.P) {
@@ -107,18 +118,20 @@ public class KeyboardListener {
                     // If game is not paused, pause the game
                     ballMovement.pauseBallMovementThread();
                     racketMovement.pauseRacketMovementThread();
-                    racketMovement.pauseRacketMovementThread();
                     restartButton.setVisible(true); // Show restart button
                     saveButton.setVisible(true); // Show save button
                     loadButton.setVisible(true); // Show load button
+                    dbSaveButton.setVisible(true); // Show db save button
+                    dbLoadButton.setVisible(true); // Show db save button
                 } else {
                     // If game is already paused, resume the game
                     ballMovement.resumeBallMovementThread();
                     racketMovement.resumeRacketMovementThread();
-                    racketMovement.resumeRacketMovementThread();
                     restartButton.setVisible(false); // Hide restart button
                     saveButton.setVisible(false); // Hide save button
                     loadButton.setVisible(false); // Hide load button
+                    dbSaveButton.setVisible(false); // Hide db save button
+                    dbLoadButton.setVisible(false); // Hide db load button
                 }
             }
         });
