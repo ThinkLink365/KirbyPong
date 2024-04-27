@@ -11,7 +11,7 @@ public interface DBGameInfo {
      * @param player1 The first player.
      * @param player2 The second player.
      */
-    void saveGameInfo(Player player1, Player player2);
+    void saveGameInfo(Player player1, Player player2,String gameName);
 
     /**
      * Loads game information for two players from the database.

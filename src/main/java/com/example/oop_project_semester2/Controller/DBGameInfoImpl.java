@@ -15,7 +15,7 @@ public class DBGameInfoImpl implements DBGameInfo {
      * @param player2 The second player.
      */
     @Override
-    public void saveGameInfo(Player player1, Player player2) {
+    public void saveGameInfo(Player player1, Player player2, String gameName) {
         // Get the singleton instance of DatabaseManager
         DatabaseManager dbManager = DatabaseManager.getInstance();
 
@@ -35,7 +35,7 @@ public class DBGameInfoImpl implements DBGameInfo {
             // Insert player data for player1
             String insertPlayer1Query = "INSERT INTO gameInfo (game_name,player_name, score, finalscore) VALUES (?, ?, ?, ?)";
             PreparedStatement player1Statement = connection.prepareStatement(insertPlayer1Query);
-            player1Statement.setString(1, "Kirby Pong");
+            player1Statement.setString(1, gameName);
             player1Statement.setString(2, player1.getName());
             player1Statement.setInt(3, player1.getPlayerScore());
             player1Statement.setInt(4, player1.getFinalscore());
@@ -45,7 +45,7 @@ public class DBGameInfoImpl implements DBGameInfo {
             // Insert player data for player2
             String insertPlayer2Query = "INSERT INTO gameInfo (game_name,player_name, score, finalscore) VALUES (?, ?, ?, ?)";
             PreparedStatement player2Statement = connection.prepareStatement(insertPlayer2Query);
-            player2Statement.setString(1, "Kirby Pong");
+            player2Statement.setString(1, gameName);
             player2Statement.setString(2, player2.getName());
             player2Statement.setInt(3, player2.getPlayerScore());
             player2Statement.setInt(4, player2.getFinalscore());

@@ -8,9 +8,7 @@ import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -23,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.*;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -61,6 +60,11 @@ public class GameScreen extends Application implements Serializable {
 
     private boolean restart = false; // Track if the game needs to be restarted
 
+    private String gameName;
+
+    private TextField gameNameField;
+
+    private Button gameButton;
     /**
      * Instantiates a new Game screen.
      *
@@ -183,6 +187,20 @@ public class GameScreen extends Application implements Serializable {
         VBox detailsPane = new VBox(exitButton, buttonsBox, popUp);
         detailsPane.setAlignment(Pos.CENTER);
 
+        gameNameField = new TextField();
+        gameNameField.setPromptText("Enter game name");
+        gameNameField.setPrefWidth(200); // Set preferred width
+        gameNameField.setMaxWidth(200); // Limit maximum width
+        gameNameField.setVisible(false);
+
+        gameButton = new Button("Confirm");
+        gameButton.setFocusTraversable(false);// Disable focus traversal for confirm button
+        gameButton.setVisible(false);
+
+        VBox game = new VBox(gameNameField, gameButton);
+        game.setAlignment(Pos.CENTER);
+        game.setSpacing(10);
+
         // BorderPane for the top section containing exit button and player details
         BorderPane topPane = new BorderPane();
         topPane.setLeft(player1Detail);
@@ -220,6 +238,7 @@ public class GameScreen extends Application implements Serializable {
         root.setLeft(racket1); // Set left racket
         root.setRight(racket2); // Set right racket
         root.setTop(topPane); // Set the top section BorderPane
+        root.setCenter(game);
         root.getChildren().add(pongball); // Add the ball to root
 
         scene = new Scene(root, 800, 800);
@@ -400,18 +419,30 @@ public class GameScreen extends Application implements Serializable {
     private void saveToDB() {
         // Create an instance of DBGameInfoImpl to save game information to the database
         DBGameInfoImpl dbGameInfo = new DBGameInfoImpl();
-        dbGameInfo.saveGameInfo(player1, player2);
 
-        // Display game saved message
-        popUp.setText("Saved to Database");
+        gameNameField.setVisible(true);
+        gameButton.setVisible(true);
+        gameButton.setOnAction(event -> {
+            String name = gameNameField.getText().trim();
+            if (!name.isEmpty()) {
+                // If a game name is provided, save the game information to the database
+                dbGameInfo.saveGameInfo(player1, player2, name);
+                // Display game saved message
+                popUp.setText("Saved to Database");
+                // Fade out the message after a delay
+                FadeTransition fadeOutTransition = new FadeTransition(Duration.seconds(2), popUp);
+                fadeOutTransition.setFromValue(1.0);
+                fadeOutTransition.setToValue(0.0);
+                fadeOutTransition.play();
+                gameNameField.setVisible(false);
+                gameButton.setVisible(false);
 
-        // Fade out the message after a delay
-        FadeTransition fadeOutTransition = new FadeTransition(Duration.seconds(2), popUp);
-        fadeOutTransition.setFromValue(1.0);
-        fadeOutTransition.setToValue(0.0);
-        fadeOutTransition.play();
+            } else {
+                // If no game name provided, display an error message
+                popUp.setText("Please enter a game name");
+            }
+        });
     }
-
     /**
      * Loads the game information for both players from the database.
      * Updates UI elements with the loaded data, starts ball movement thread, and displays a confirmation message.
